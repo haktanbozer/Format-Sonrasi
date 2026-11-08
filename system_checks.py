@@ -154,8 +154,34 @@ def ensure_secure_dir(path: str) -> str:
         else:
             owner = _owner_sid(abs_path)
             if owner not in SAFE_OWNERS:
-                # Saldırgan veya standart kullanıcı sahipliğinde; güvenilmez, silip yeniden kur
-                shutil.rmtree(abs_path, ignore_errors=True)
+                # Standart kullanıcı veya farklı sahiplik:
+                # tweaks_backup.json dosyasını korumak için klasörü silmek yerine
+                # sahipliği Administrators grubuna devral.
+                preserved_backups = {}
+                try:
+                    for fname in os.listdir(abs_path):
+                        if fname.startswith("tweaks_backup.json"):
+                            fpath = os.path.join(abs_path, fname)
+                            if os.path.isfile(fpath):
+                                with open(fpath, "rb") as bf:
+                                    preserved_backups[fname] = bf.read()
+                except Exception:
+                    pass
+
+                takeown_exe = get_system32_path("takeown.exe")
+                cflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+                subprocess.run([takeown_exe, "/f", abs_path, "/a"], capture_output=True, creationflags=cflags)
+                owner = _owner_sid(abs_path)
+                if owner not in SAFE_OWNERS:
+                    # Sahiplik devralınamadıysa güvenilmez dizini temizle ama yedeği koru
+                    shutil.rmtree(abs_path, ignore_errors=True)
+                    os.makedirs(abs_path, exist_ok=True)
+                    for fname, bdata in preserved_backups.items():
+                        try:
+                            with open(os.path.join(abs_path, fname), "wb") as bf:
+                                bf.write(bdata)
+                        except Exception:
+                            pass
 
     os.makedirs(abs_path, exist_ok=True)
     creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
@@ -399,3 +425,42 @@ def run_all_preflight_checks(required_mb: Optional[int] = None) -> List[Dict[str
         check_disk_space(required_mb),
         check_pending_reboot(),
     ]
+
+
+def get_interactive_console_user() -> Optional[str]:
+    """Aktif etkileşimli konsol oturumunun kullanıcı adını döner."""
+    if os.name != "nt":
+        return None
+    try:
+        import ctypes
+        from ctypes import wintypes
+        wtsapi32 = ctypes.WinDLL("wtsapi32", use_last_error=True)
+        buf = ctypes.c_wchar_p()
+        ret_bytes = wintypes.DWORD()
+        # WTS_CURRENT_SERVER_HANDLE = 0, WTS_CURRENT_SESSION = -1, WTSUserName = 5
+        if wtsapi32.WTSQuerySessionInformationW(0, -1, 5, ctypes.byref(buf), ctypes.byref(ret_bytes)):
+            user = buf.value
+            wtsapi32.WTSFreeMemory(buf)
+            return user
+    except Exception:
+        pass
+    return None
+
+
+def detect_elevation_user_mismatch() -> Optional[Tuple[str, str]]:
+    """
+    Uygulama yöneticisi ile masaüstünde oturum açan kullanıcı farklı ise
+    (örn: standart kullanıcının UAC'de başka bir yöneticinin parolasını girmesi),
+    (process_user, interactive_user) çifti döner; aksi halde None döner.
+    """
+    if os.name != "nt":
+        return None
+    try:
+        process_user = os.environ.get("USERNAME", "")
+        interactive_user = get_interactive_console_user()
+        if process_user and interactive_user:
+            if process_user.strip().lower() != interactive_user.strip().lower():
+                return (process_user.strip(), interactive_user.strip())
+    except Exception:
+        pass
+    return None
