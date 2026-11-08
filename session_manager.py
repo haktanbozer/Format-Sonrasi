@@ -50,7 +50,7 @@ class SessionManager:
 
     @staticmethod
     def cleanup_stale_temp_files():
-        """Geçmiş çökmelerden kalan sess_*.tmp artık dosyalarını temizler."""
+        """Geçmiş çökmelerden kalan sess_*.tmp artık dosyalarını ve stale bin kopyasını temizler."""
         with SessionManager._lock:
             try:
                 for item in os.listdir(SESSION_DIR):
@@ -60,6 +60,16 @@ class SessionManager:
                             os.remove(p)
                         except Exception:
                             pass
+            except Exception:
+                pass
+
+            # ProgramData\FormatSonrasi\bin altındaki artık resume kopyasını (normal açılışta) temizle
+            try:
+                program_data = os.environ.get("ProgramData", r"C:\ProgramData")
+                bin_dir = os.path.join(program_data, "FormatSonrasi", "bin")
+                running_from_bin = os.path.dirname(os.path.abspath(sys.executable)).lower() == os.path.abspath(bin_dir).lower()
+                if not running_from_bin and os.path.isdir(bin_dir):
+                    shutil.rmtree(bin_dir, ignore_errors=True)
             except Exception:
                 pass
 

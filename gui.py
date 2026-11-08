@@ -228,6 +228,8 @@ class MainWindow(ctk.CTk):
             "status": ctk.CTkFont(size=11),
         }
 
+                # Açılışta önceki oturumlardan kalan artık geçici dosyaları temizle
+        SessionManager.cleanup_stale_temp_files()
         self._build_top_bar()
         self._build_body_layout()
         self._build_bottom_bar()
@@ -280,6 +282,17 @@ class MainWindow(ctk.CTk):
         right_actions.pack(side="right", padx=16, pady=12)
 
         self.is_admin_user = is_admin()
+        self.elevation_mismatch = detect_elevation_user_mismatch()
+        if self.elevation_mismatch:
+            p_user, c_user = self.elevation_mismatch
+            mismatch_lbl = ctk.CTkLabel(
+                right_actions,
+                text=f"Oturum: {p_user} ({c_user})",
+                font=ctk.CTkFont(size=10, weight="bold"),
+                text_color="#f59e0b",
+            )
+            mismatch_lbl.pack(side="left", padx=4)
+
         if self.is_admin_user:
             admin_lbl = ctk.CTkLabel(
                 right_actions,
@@ -1406,8 +1419,24 @@ class MainWindow(ctk.CTk):
             self.console_visible = True
 
     def _elevate_admin(self):
-        request_admin_elevation()
-        self.destroy()
+        try:
+            import main
+            if hasattr(main, "GLOBAL_MUTEX") and main.GLOBAL_MUTEX:
+                main.release_single_instance_mutex(main.GLOBAL_MUTEX)
+                main.GLOBAL_MUTEX = None
+        except Exception as e:
+            logger.debug(f"Mutex serbest bırakılamadı: {e}")
+
+        success = request_admin_elevation()
+        if success:
+            self.destroy()
+        else:
+            try:
+                import main
+                main.GLOBAL_MUTEX = main.ensure_single_instance()
+            except Exception as e:
+                logger.debug(f"Mutex yeniden alınamadı: {e}")
+            self.append_log("[BİLGİ] Yönetici izni alma işlemi kullanıcı tarafından iptal edildi.\n")
 
     def append_log(self, text: str):
         """Her iş parçacığından (thread) çağrılması güvenlidir; doğrudan kuyruğa yazar."""
@@ -1671,9 +1700,11 @@ class MainWindow(ctk.CTk):
 
             if summary["cancelled"]:
                 self.status_label.configure(text="Kurulum durduruldu.")
+                failed_cnt = summary.get("failed", 0)
+                remaining_cnt = max(0, summary["total"] - (summary["successful"] + failed_cnt))
                 messagebox.showwarning(
                     "Durduruldu",
-                    f"Kurulum durduruldu.\nTamamlanan: {summary['successful']}\nKalan: {summary['total'] - summary['successful']}",
+                    f"Kurulum durduruldu.\nTamamlanan: {summary['successful']}\nBaşarısız: {failed_cnt}\nKalan: {remaining_cnt}",
                 )
             else:
                 self.status_label.configure(text=f"İşlem bitti: {summary['successful']}/{summary['total']} program kuruldu.")

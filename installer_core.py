@@ -27,10 +27,48 @@ from app_logger import get_logger
 
 logger = get_logger("installer_core")
 
-# WinGet / AppInstaller hata ve durum kodları
-# 0x8A15002B = 2316632107 (işaretsiz) / -1978335189 (işaretli):
-# APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE (paket güncel, uygulanabilir güncelleme yok)
-APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE = 0x8A15002B
+# WinGet / AppInstaller dönüş kodları (Microsoft AppInstallerErrors.h)
+APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE = 0x8A15002B      # 2316632107 (Güncelleme yok / güncel)
+APPINSTALLER_CLI_ERROR_PACKAGE_ALREADY_INSTALLED = 0x8A150061  # 2316632161 (Paket zaten kurulu)
+APPINSTALLER_CLI_ERROR_REBOOT_REQUIRED = 0x8A150109            # 2316632329 (Yeniden başlatma gerekli)
+APPINSTALLER_CLI_ERROR_REBOOT_INITIATED = 0x8A15010B           # 2316632331 (Yeniden başlatma başlatıldı)
+
+WINGET_REBOOT_CODES = {
+    3010,
+    1641,
+    APPINSTALLER_CLI_ERROR_REBOOT_REQUIRED,
+    APPINSTALLER_CLI_ERROR_REBOOT_INITIATED,
+}
+
+WINGET_SUCCESS_CODES = {0} | WINGET_REBOOT_CODES
+
+WINGET_ALREADY_INSTALLED_CODES = {
+    APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE,
+    APPINSTALLER_CLI_ERROR_PACKAGE_ALREADY_INSTALLED,
+}
+
+
+def get_app_timeout(app: Dict[str, Any], default_sec: int = 900) -> int:
+    """Uygulama için zaman aşımı süresini (saniye) hesaplar."""
+    if app.get("timeout_sec"):
+        try:
+            return max(int(app["timeout_sec"]), 300)
+        except (ValueError, TypeError):
+            pass
+    size_mb = 100
+    try:
+        raw_size = app.get("size_mb")
+        if raw_size is not None and str(raw_size).strip():
+            size_mb = int(raw_size)
+    except (ValueError, TypeError):
+        size_mb = 100
+
+    weight = app.get("weight", 2)
+    calc_sec = max(default_sec, int(size_mb * 2.5))
+    if weight == 4:
+        calc_sec = max(calc_sec, 1800)  # En az 30 dakika
+    return min(calc_sec, 7200)  # En fazla 2 saat
+
 
 
 class StrictHTTPSRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -57,15 +95,20 @@ class StrictHTTPSRedirectHandler(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def request_admin_elevation():
-    """Programı yönetici olarak güvenle (komut enjeksiyonu korumalı) yeniden başlatır."""
+def request_admin_elevation() -> bool:
+    """Programı yönetici olarak güvenle (komut enjeksiyonu korumalı) yeniden başlatır.
+    Kullanıcı UAC onayını verirse True, reddederse False döner.
+    """
+    if os.name != "nt":
+        return False
     if getattr(sys, "frozen", False):
         exe = sys.executable
         args = subprocess.list2cmdline(sys.argv[1:])
     else:
         exe = sys.executable
         args = subprocess.list2cmdline(sys.argv)
-    ctypes.windll.shell32.ShellExecuteW(None, "runas", exe, args, None, 1)
+    ret = ctypes.windll.shell32.ShellExecuteW(None, "runas", exe, args, None, 1)
+    return ret > 32
 
 
 def detect_installed_packages() -> Set[str]:
@@ -249,7 +292,8 @@ class InstallationWorker(threading.Thread):
         }
         self.on_finished(summary)
 
-    def _install_winget(self, index: int, total: int, app: Dict[str, Any], timeout_sec: int = 900) -> Tuple[bool, str, bool, bool]:
+    def _install_winget(self, index: int, total: int, app: Dict[str, Any], timeout_sec: Optional[int] = None) -> Tuple[bool, str, bool, bool]:
+        timeout_sec = get_app_timeout(app, default_sec=timeout_sec or 900)
         app_name = app["name"]
         winget_id = app["winget_id"]
         self.on_log(f"[{index}/{total}] [İNDİRİLİYOR] '{app_name}' winget ile indiriliyor ve kuruluyor ({winget_id})...")
@@ -335,13 +379,12 @@ class InstallationWorker(threading.Thread):
         elapsed = round(time.time() - start_time, 1)
         ret_u = ret_code & 0xFFFFFFFF
 
-        if ret_u in (0, 1641, 3010):
-            is_reboot = (ret_u in (1641, 3010))
+        if ret_u in WINGET_SUCCESS_CODES:
+            is_reboot = (ret_u in WINGET_REBOOT_CODES)
             self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' başarıyla kuruldu ({elapsed} sn).\n")
             return True, f"Kuruldu ({elapsed} sn)", is_reboot, False
-        elif ret_u == APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE:
-            # WinGet APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE (0x8A15002B)
-            # Paket sistemde zaten mevcut ve daha yeni bir sürümü yok
+        elif ret_u in WINGET_ALREADY_INSTALLED_CODES:
+            # WinGet paket zaten kurulu veya güncel (0x8A15002B / 0x8A150061)
             self.on_log(f"[{index}/{total}] [BİLGİ] '{app_name}' zaten sistemde güncel sürümde mevcut.\n")
             return True, "Zaten kurulu", False, True
         else:
@@ -398,7 +441,12 @@ class InstallationWorker(threading.Thread):
         download_url = app["download_url"]
         silent_args = app.get("silent_args", ["/quiet", "/norestart"])
         expected_sha256 = app.get("sha256")
-        max_size_mb = min(max(app.get("size_mb", 100) * 3, 50), 4096)  # Güvenlik sınırı (50 MB - 4096 MB)
+        try:
+            raw_size = app.get("size_mb")
+            size_mb = int(raw_size) if raw_size else 100
+        except (ValueError, TypeError):
+            size_mb = 100
+        max_size_mb = min(max(size_mb * 3, 50), 4096)  # Güvenlik sınırı (50 MB - 4096 MB)
         max_bytes = max_size_mb * 1024 * 1024
 
         # 1. URL Güvenlik Doğrulaması (Yalnızca HTTPS kabul edilir)
@@ -435,6 +483,9 @@ class InstallationWorker(threading.Thread):
                 with os.fdopen(temp_fd, "wb") as f:
                     temp_fd = None  # fdopen sahiplendi
                     while True:
+                        if self.is_cancelled:
+                            self.on_log(f"[{index}/{total}] [İPTAL] '{app_name}' indirmesi kullanıcı tarafından durduruldu.\n")
+                            return False, "Kullanıcı tarafından iptal edildi", False, False
                         chunk = resp.read(65536)
                         if not chunk:
                             break
@@ -459,7 +510,7 @@ class InstallationWorker(threading.Thread):
                     return False, f"Güvenlik Engeli: Geçersiz Dijital İmza ({sig_info})", False, False
                 self.on_log(f"    > Authenticode dijital imzası geçerli ({sig_info}).")
 
-            # 4. Çalıştırmadan hemen önce diskteki dosyanın hash'ini yeniden doğrula (Zero TOCTOU güvencesi)
+            # 4. Çalıştırmadan hemen önce diskteki dosyanın hash'ini yeniden doğrula (bütünlük denetimi)
             if expected_sha256:
                 h_final = hashlib.sha256()
                 with open(temp_exe, "rb") as f_chk:
@@ -469,17 +520,22 @@ class InstallationWorker(threading.Thread):
                     self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] Çalıştırma öncesi hash uyuşmazlığı!\n")
                     return False, "Güvenlik Engeli: Çalıştırma öncesi dosya bütünlüğü bozulmuş", False, False
 
+            if self.is_cancelled:
+                self.on_log(f"[{index}/{total}] [İPTAL] '{app_name}' kurulumu başlatılmadan durduruldu.\n")
+                return False, "Kullanıcı tarafından iptal edildi", False, False
+
+            timeout_sec = get_app_timeout(app, default_sec=600)
             self.on_log(f"[{index}/{total}] [KURULUYOR] '{app_name}' sessiz kurulum çalıştırılıyor...")
             cmd = [temp_exe] + silent_args
             creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
             self.current_process = subprocess.Popen(cmd, creationflags=creationflags)
             try:
-                self.current_process.wait(timeout=600)
+                self.current_process.wait(timeout=timeout_sec)
                 ret_code = self.current_process.returncode
             except subprocess.TimeoutExpired:
-                self.on_log(f"[{index}/{total}] [ZAMAN AŞIMI] '{app_name}' sessiz kurulumu 10 dakika zaman aşımına uğradı.\n")
+                self.on_log(f"[{index}/{total}] [ZAMAN AŞIMI] '{app_name}' sessiz kurulumu {timeout_sec // 60} dakika zaman aşımına uğradı.\n")
                 self._kill_current_process()
-                return False, "Zaman aşımı (10 dk)", False, False
+                return False, f"Zaman aşımı ({timeout_sec // 60} dk)", False, False
             finally:
                 self.current_process = None
 
@@ -515,10 +571,21 @@ class InstallationWorker(threading.Thread):
             headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
         )
         opener = urllib.request.build_opener(StrictHTTPSRedirectHandler())
+        pkg_chunks = []
+        pkg_total = 0
         with opener.open(req, timeout=40) as resp:
-            pkg_data = resp.read(max_pkg_size + 1)
-            if len(pkg_data) > max_pkg_size:
-                return False, "Güvenlik Sınırı: Paket boyutu aşırı büyük", False, False
+            while True:
+                if self.is_cancelled:
+                    self.on_log(f"[{index}/{total}] [İPTAL] '{app_name}' indirmesi durduruldu.\n")
+                    return False, "Kullanıcı tarafından iptal edildi", False, False
+                chunk = resp.read(65536)
+                if not chunk:
+                    break
+                pkg_total += len(chunk)
+                if pkg_total > max_pkg_size:
+                    return False, "Güvenlik Sınırı: Paket boyutu aşırı büyük", False, False
+                pkg_chunks.append(chunk)
+        pkg_data = b"".join(pkg_chunks)
 
         z = zipfile.ZipFile(io.BytesIO(pkg_data))
         target_name = None
@@ -555,17 +622,22 @@ class InstallationWorker(threading.Thread):
                 return False, f"Güvenlik Engeli: Geçersiz FileZilla İmzası ({sig_info})", False, False
             self.on_log(f"    > FileZilla resmi dijital imzası doğrulandı ({sig_info}).")
 
+            if self.is_cancelled:
+                self.on_log(f"[{index}/{total}] [İPTAL] '{app_name}' kurulumu başlatılmadan durduruldu.\n")
+                return False, "Kullanıcı tarafından iptal edildi", False, False
+
+            timeout_sec = get_app_timeout(app, default_sec=300)
             self.on_log(f"[{index}/{total}] [KURULUYOR] Sessiz kurulum calistiriliyor...")
             cmd = [temp_exe, "/S"]
             creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
             self.current_process = subprocess.Popen(cmd, creationflags=creationflags)
             try:
-                self.current_process.wait(timeout=300)
+                self.current_process.wait(timeout=timeout_sec)
                 ret_code = self.current_process.returncode
             except subprocess.TimeoutExpired:
-                self.on_log(f"[{index}/{total}] [ZAMAN AŞIMI] '{app_name}' kurulumu zaman aşımına uğradı.\n")
+                self.on_log(f"[{index}/{total}] [ZAMAN AŞIMI] '{app_name}' kurulumu {timeout_sec // 60} dakika zaman aşımına uğradı.\n")
                 self._kill_current_process()
-                return False, "Zaman aşımı (5 dk)", False, False
+                return False, f"Zaman aşımı ({timeout_sec // 60} dk)", False, False
             finally:
                 self.current_process = None
 

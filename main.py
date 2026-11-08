@@ -1,3 +1,20 @@
+GLOBAL_MUTEX = None
+
+
+def release_single_instance_mutex(mutex=None):
+    """Tekil örnek mutex'ini serbest bırakır (yükseltilmiş yeni süreçle yarış durumunu önler)."""
+    global GLOBAL_MUTEX
+    target_mutex = mutex or GLOBAL_MUTEX
+    if target_mutex and os.name == "nt":
+        try:
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.ReleaseMutex(target_mutex)
+            kernel32.CloseHandle(target_mutex)
+        except Exception:
+            pass
+    if target_mutex == GLOBAL_MUTEX:
+        GLOBAL_MUTEX = None
+
 # -*- coding: utf-8 -*-
 """
 Format Sonrası Kurulum Sihirbazı - Ana Başlatıcı
@@ -58,7 +75,9 @@ def ensure_single_instance():
 
 def main():
     t_start = time.perf_counter()
-    _mutex = ensure_single_instance()
+    global GLOBAL_MUTEX
+    GLOBAL_MUTEX = ensure_single_instance()
+    _mutex = GLOBAL_MUTEX
     try:
         from gui import MainWindow
         t_import = time.perf_counter()
