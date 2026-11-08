@@ -120,6 +120,196 @@ class TestInstallerCore(unittest.TestCase):
         req2 = handler.redirect_request(dummy_req, None, 302, "Found", {}, "https://github.com/owner/repo/setup.exe")
         self.assertIsNotNone(req2)
 
+    def test_cancellation_during_direct_download(self):
+        """Doğrudan indirme sırasında is_cancelled True olunca indirme durdurulmalı ve dosya temizlenmeli."""
+        fake_content = b"MZFakeExecutableContent" * 1000
+        expected_sha = hashlib.sha256(fake_content).hexdigest()
+
+        class CancellableStream:
+            def __init__(self, data, worker):
+                self.stream = io.BytesIO(data)
+                self.worker = worker
+                self.read_count = 0
+
+            def read(self, size):
+                self.read_count += 1
+                chunk = self.stream.read(size)
+                if self.read_count >= 1:
+                    self.worker.is_cancelled = True
+                return chunk
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            app = {
+                "name": "CancelTestApp",
+                "download_url": "https://github.com/owner/repo/setup.exe",
+                "sha256": expected_sha,
+                "size_mb": 5,
+            }
+            mock_stream = CancellableStream(fake_content, self.worker)
+            mock_opener = MagicMock()
+            mock_opener.open.return_value.__enter__.return_value = mock_stream
+
+            with patch.object(self.worker, "_secure_download_dir", return_value=temp_dir), \
+                 patch("urllib.request.build_opener", return_value=mock_opener), \
+                 patch("subprocess.Popen") as mock_popen:
+
+                ok, msg, is_reboot, is_already = self.worker._install_direct_exe(1, 1, app)
+                self.assertFalse(ok)
+                self.assertIn("iptal", msg.lower())
+                mock_popen.assert_not_called()
+                self.assertEqual(len(os.listdir(temp_dir)), 0)
+
+    def test_cancellation_during_filezilla_clean(self):
+        """FileZilla indirmesi sırasında iptal tetiklenirse indirme durdurulmalı ve Popen çağrılmamalı."""
+        fake_content = b"MZFileZillaSetupContent" * 1000
+
+        class CancellableStream:
+            def __init__(self, data, worker):
+                self.stream = io.BytesIO(data)
+                self.worker = worker
+
+            def read(self, size):
+                chunk = self.stream.read(size)
+                self.worker.is_cancelled = True
+                return chunk
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            app = {
+                "name": "FileZilla",
+                "silent_args": ["/S"],
+            }
+            mock_stream = CancellableStream(fake_content, self.worker)
+            mock_opener = MagicMock()
+            mock_opener.open.return_value.__enter__.return_value = mock_stream
+
+            with patch.object(self.worker, "_secure_download_dir", return_value=temp_dir), \
+                 patch("urllib.request.build_opener", return_value=mock_opener), \
+                 patch("subprocess.Popen") as mock_popen:
+
+                ok, msg, is_reboot, is_already = self.worker._install_filezilla_clean(1, 1, app)
+                self.assertFalse(ok)
+                self.assertIn("iptal", msg.lower())
+                mock_popen.assert_not_called()
+
+    def test_cancellation_before_popen(self):
+        """İndirme bittikten hemen sonra ama Popen öncesinde is_cancelled True ise süreç başlatılmamalı."""
+        fake_content = b"MZFakeExecutableContent"
+        expected_sha = hashlib.sha256(fake_content).hexdigest()
+
+        class CancelAfterStream:
+            def __init__(self, data, worker):
+                self.stream = io.BytesIO(data)
+                self.worker = worker
+
+            def read(self, size):
+                chunk = self.stream.read(size)
+                if not chunk:
+                    self.worker.is_cancelled = True
+                return chunk
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            app = {
+                "name": "CancelBeforePopenApp",
+                "download_url": "https://github.com/owner/repo/setup.exe",
+                "sha256": expected_sha,
+                "size_mb": 1,
+            }
+            mock_stream = CancelAfterStream(fake_content, self.worker)
+            mock_opener = MagicMock()
+            mock_opener.open.return_value.__enter__.return_value = mock_stream
+
+            with patch.object(self.worker, "_secure_download_dir", return_value=temp_dir), \
+                 patch("urllib.request.build_opener", return_value=mock_opener), \
+                 patch("subprocess.Popen") as mock_popen:
+
+                ok, msg, is_reboot, is_already = self.worker._install_direct_exe(1, 1, app)
+                self.assertFalse(ok)
+                self.assertIn("iptal", msg.lower())
+                mock_popen.assert_not_called()
+
+    def test_winget_exit_codes_mapping(self):
+        """Winget dönüş kodlarının (0, 3010, 1641, 0x8A150109, 0x8A15010B, 0x8A150061, 0x8A15002B) doğru eşlendiğini doğrular."""
+        from installer_core import (
+            APPINSTALLER_CLI_ERROR_REBOOT_REQUIRED,
+            APPINSTALLER_CLI_ERROR_REBOOT_INITIATED,
+            APPINSTALLER_CLI_ERROR_PACKAGE_ALREADY_INSTALLED,
+            APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE,
+        )
+
+        test_cases = [
+            (0, True, False, False),
+            (3010, True, True, False),
+            (1641, True, True, False),
+            (APPINSTALLER_CLI_ERROR_REBOOT_REQUIRED, True, True, False),
+            (APPINSTALLER_CLI_ERROR_REBOOT_INITIATED, True, True, False),
+            (APPINSTALLER_CLI_ERROR_PACKAGE_ALREADY_INSTALLED, True, False, True),
+            (APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE, True, False, True),
+            (1603, False, False, False),
+            (-1, False, False, False),
+        ]
+
+        app = {"name": "TestPkg", "winget_id": "Test.Pkg", "source": "winget"}
+
+        for ret_code, exp_succ, exp_reboot, exp_already in test_cases:
+            mock_proc = MagicMock()
+            mock_proc.stdout.readline.side_effect = ["Starting install...\n", ""]
+            mock_proc.wait.return_value = None
+            mock_proc.returncode = ret_code
+
+            with patch("subprocess.Popen", return_value=mock_proc):
+                ok, msg, is_reboot, is_already = self.worker._install_winget(1, 1, app)
+                self.assertEqual(ok, exp_succ, f"Code {hex(ret_code) if isinstance(ret_code, int) and ret_code > 0 else ret_code} success mismatch")
+                self.assertEqual(is_reboot, exp_reboot, f"Code {ret_code} reboot mismatch")
+                self.assertEqual(is_already, exp_already, f"Code {ret_code} already mismatch")
+
+    def test_size_mb_null_or_invalid_handled_safely(self):
+        """size_mb alanı None, boş metin veya geçersiz tip olduğunda TypeError/ValueError atılmadığını doğrular."""
+        fake_content = b"MZFakeExecutableContent"
+        expected_sha = hashlib.sha256(fake_content).hexdigest()
+
+        for invalid_size in [None, "", "unknown", []]:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                app = {
+                    "name": "InvalidSizeApp",
+                    "download_url": "https://github.com/owner/repo/setup.exe",
+                    "sha256": expected_sha,
+                    "size_mb": invalid_size,
+                }
+                mock_proc = MagicMock()
+                mock_proc.wait.return_value = None
+                mock_proc.returncode = 0
+
+                mock_resp = io.BytesIO(fake_content)
+                mock_opener = MagicMock()
+                mock_opener.open.return_value.__enter__.return_value = mock_resp
+
+                with patch.object(self.worker, "_secure_download_dir", return_value=temp_dir), \
+                     patch("urllib.request.build_opener", return_value=mock_opener), \
+                     patch("subprocess.Popen", return_value=mock_proc):
+
+                    ok, msg, is_reboot, is_already = self.worker._install_direct_exe(1, 1, app)
+                    self.assertTrue(ok)
+
+    def test_adaptive_timeout_calculation(self):
+        """get_app_timeout fonksiyonunun özel timeout, boyut ölçekleme ve varsayılanları doğru hesapladığını doğrular."""
+        from installer_core import get_app_timeout
+
+        # Özel timeout_sec varsa o kullanılmalı
+        app1 = {"id": "vs", "name": "VS", "timeout_sec": 3600, "size_mb": 500}
+        self.assertEqual(get_app_timeout(app1, 600), 3600)
+
+        # Büyük boyutlu uygulama (1000 MB -> 1000 * 2.5 = 2500 sn)
+        app2 = {"id": "big_app", "name": "BigApp", "size_mb": 1000}
+        self.assertEqual(get_app_timeout(app2, 600), 2500)
+
+        # Küçük boyutlu uygulama -> varsayılan değer dönmeli
+        app3 = {"id": "small_app", "name": "SmallApp", "size_mb": 50}
+        self.assertEqual(get_app_timeout(app3, 600), 600)
+
+        # Ağır paketler (weight=4 -> en az 1800 saniye)
+        app4 = {"id": "heavy_app", "name": "Heavy App", "weight": 4, "size_mb": 100}
+        self.assertEqual(get_app_timeout(app4, 600), 1800)
+
 
 if __name__ == "__main__":
     unittest.main()
