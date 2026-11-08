@@ -260,7 +260,7 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--skip-download", action="store_true", help="SHA-256 sabitli dosyaları indirme")
     ap.add_argument("--strict", action="store_true", help="Geçici (ERROR) sonuçları da hata say")
-    ap.add_argument("--report-dir", default=".")
+    ap.add_argument("--report-dir", default="report")
     ap.add_argument("--write-evidence", metavar="CSV", help="winget_kanit.csv biçiminde kanıt dosyası yaz")
     args = ap.parse_args()
 

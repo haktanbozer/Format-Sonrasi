@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller derleme ve dağıtım çıktıları
+build/
+dist/
+*.spec
+FormatSonrasiKurulum/
+*.exe
+*.zip
+*.sha256
+SHA256SUMS.txt
+
+# Geçici çalışma dizinleri ve loglar
+*.log
+scratch/
+.temp/
+*.tmp
+*.bak
+*.corrupt*
+
+# Ortam ve geliştirici dizinleri
+.env
+.venv
+env/
+venv/
+ENV/
+.idea/
+.vscode/
+*.suo
+*.user
+
+# Test ve kapsama raporları
+.pytest_cache/
+.coverage
+htmlcov/
