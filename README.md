@@ -1,7 +1,7 @@
 # Format Sonrası Kurulum Sihirbazı (Universal Edition v1.0)
 
-[![CI & Test Suite](https://github.com/owner/Format-Sonrasi/actions/workflows/ci.yml/badge.svg)](https://github.com/owner/Format-Sonrasi/actions/workflows/ci.yml)
-[![Build & Release](https://github.com/owner/Format-Sonrasi/actions/workflows/release.yml/badge.svg)](https://github.com/owner/Format-Sonrasi/actions/workflows/release.yml)
+[![CI & Test Suite](https://github.com/haktanbozer/Format-Sonrasi/actions/workflows/ci.yml/badge.svg)](https://github.com/haktanbozer/Format-Sonrasi/actions/workflows/ci.yml)
+[![Build & Release](https://github.com/haktanbozer/Format-Sonrasi/actions/workflows/release.yml/badge.svg)](https://github.com/haktanbozer/Format-Sonrasi/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Windows kurulumu veya format sonrası ihtiyaç duyulan temel yazılımları, geliştirici araçlarını, mühendislik paketlerini ve sistem optimizasyonlarını pratik, güvenilir ve toplu bir şekilde kurmanızı sağlayan açık kaynaklı bir masaüstü uygulamasıdır. 
@@ -47,7 +47,7 @@ Katalog bünyesinde **204 uygulama**, **14 ana kategori**, **14 sistem optimizas
    - Doğrudan indirilen ikili dosyalarda yalnızca HTTPS kullanılır ve alan adı yönlendirme denetimi (`StrictHTTPSRedirectHandler`) uygulanır.
    - İndirmeler yalnızca yöneticilerin erişebildiği güvenli dizinde tutulur.
    - İndirme boyutu güvenlik katsayısı (`min(max(size*3, 50), 4096) MB`) ile beklenmeyen aşırı büyük veri transferleri engellenir.
-   - Çalıştırma öncesi hash kontrolü yapılarak yarış durumu (TOCTOU) riskleri önlenir.
+   - Çalıştırma öncesi hash kontrolü ve ACL yetkilendirmesi ile dosya bütünlüğü sağlanır.
 
 ---
 
@@ -74,7 +74,8 @@ Katalog bünyesinde **204 uygulama**, **14 ana kategori**, **14 sistem optimizas
   ```powershell
   Get-FileHash .\FormatSonrasiKurulum-v1.0.zip -Algorithm SHA256
   ```
-- **Gizlilik:** Uygulama hiçbir telemetri, kullanıcı takibi veya kullanım analitiği toplamaz. Ağ bağlantıları yalnızca paket depoları (Microsoft WinGet CDN, Chocolatey, GitHub Releases ve ilgili yazılımların resmi siteleri) ile kurulur.
+- **Gizlilik:** Uygulama hiçbir telemetri, kullanıcı takibi veya kullanım analitiği toplamaz. Ağ bağlantıları yalnızca paket depoları (Microsoft WinGet CDN, Chocolatey, GitHub Releases ve ilgili yazılımların resmi siteleri) ile kurulur. Dell marka cihazlarda donanım bilgisi panelinde tespit edilen Servis Etiketi (Service Tag), yalnızca Dell resmi destek portalında doğrudan sürücü indirme bağlantısı sunmak amacıyla yerel olarak kullanılır ve hiçbir üçüncü taraf sunucuya aktarılmaz.
+- **Yükseltilmiş Oturum ve HKCU Yönetimi:** Standart bir Windows kullanıcısı uygulamayı farklı bir yönetici hesabı kimlik bilgileriyle (Over-the-shoulder UAC) yetkilendirirse, Windows mimarisi gereği `HKCU` kayıt defteri anahtarları ve `%LOCALAPPDATA%` dizini o yönetici hesabına ait olur. Format sonrası kullanım senaryolarında ilk kullanıcı hesabı genelde zaten yöneticidir; farklı hesapla yükseltme yapıldığında uygulama kullanıcıyı başlık çubuğunda ve günlüklerde bilgilendirir.
 
 ---
 
