@@ -114,6 +114,14 @@ def static_checks(apps: List[Dict[str, Any]]) -> List[Tuple[str, str, str]]:
         if bad_keys:
             out.append(("WARN", aid, f"Bilinmeyen verify anahtarları: {sorted(bad_keys)}"))
 
+        # EOL (End of Life) kontrolü
+        if aid in ("vs_community_2017", "vs_ent_2017", "vs_buildtools_2017"):
+            out.append(("WARN", aid, "Microsoft Visual Studio 2017 desteği sona ermektedir (EOL); yeni projeler için güncel sürümler önerilir"))
+
+        # Sabit sürüm (pinned_version) bayatlama takibi
+        if app.get("pinned_version"):
+            out.append(("WARN", aid, f"Sabit sürüm kilitli (v{app['pinned_version']}); upstream yeni sürüm ve hash değişiklikleri periyodik denetlenmeli"))
+
         grp = app.get("conflict_group")
         if grp:
             group_members[grp] = group_members.get(grp, 0) + 1

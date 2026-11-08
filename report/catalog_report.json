@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-11-08T14:50:52Z",
-  "catalog_sha": "a28ee430ad1d",
+  "generated_utc": "2026-11-08T19:12:25Z",
+  "catalog_sha": "3f84b013cfa8",
   "app_count": 204,
   "category_count": 14,
   "summary": {
@@ -9,7 +9,28 @@
     "ERROR": 0,
     "SKIPPED": 0
   },
-  "static": [],
+  "static": [
+    {
+      "level": "WARN",
+      "id": "vs_community_2017",
+      "message": "Microsoft Visual Studio 2017 desteği sona ermektedir (EOL); yeni projeler için güncel sürümler önerilir"
+    },
+    {
+      "level": "WARN",
+      "id": "vs_ent_2017",
+      "message": "Microsoft Visual Studio 2017 desteği sona ermektedir (EOL); yeni projeler için güncel sürümler önerilir"
+    },
+    {
+      "level": "WARN",
+      "id": "vs_buildtools_2017",
+      "message": "Microsoft Visual Studio 2017 desteği sona ermektedir (EOL); yeni projeler için güncel sürümler önerilir"
+    },
+    {
+      "level": "WARN",
+      "id": "rustdesk",
+      "message": "Sabit sürüm kilitli (v1.5.1); upstream yeni sürüm ve hash değişiklikleri periyodik denetlenmeli"
+    }
+  ],
   "results": [],
   "info": [],
   "exit_code": 0
