@@ -321,6 +321,51 @@ def apply_show_this_pc_desktop(enable=True, scope="all") -> Tuple[bool, str]:
     return False, "Kayıt defteri doğrulanamadı."
 
 
+
+def _revert_single_tweak(tweak_id: str, scope="all") -> Tuple[bool, str]:
+    """Tek bir ayarı tweaks_backup.json içindeki orijinal değerine geri döndürür."""
+    backup = _load_backup()
+    if not backup or tweak_id not in backup:
+        return False, "Yedekte bu ayara ait kayıtlı bir durum bulunamadı."
+
+    entries = backup[tweak_id]
+    try:
+        for entry_key, info in entries.items():
+            root_name = info["root"]
+            key_path = info["key_path"]
+            value_name = info["value_name"]
+            existed = info["existed"]
+            val_data = info["data"]
+            val_type = info["type"]
+
+            if not _location_allowed(tweak_id, root_name, key_path, value_name):
+                return False, f"Geri alma konumu izinli listede değil: {key_path}\\{value_name}"
+
+            root = winreg.HKEY_LOCAL_MACHINE if root_name == "HKLM" else winreg.HKEY_CURRENT_USER
+
+            if existed and val_data is not None and val_type is not None:
+                if not _entry_allowed(tweak_id, root_name, key_path, value_name, val_type, val_data):
+                    return False, f"Geri alma verisi geçersiz: {key_path}\\{value_name}"
+                with winreg.CreateKeyEx(root, key_path, 0, winreg.KEY_SET_VALUE) as k:
+                    winreg.SetValueEx(k, value_name, 0, val_type, val_data)
+            else:
+                _safe_delete_reg_value(root, key_path, value_name)
+
+        backup.pop(tweak_id, None)
+        if not backup:
+            if os.path.exists(BACKUP_FILE):
+                try:
+                    os.remove(BACKUP_FILE)
+                except Exception:
+                    pass
+        else:
+            _save_backup(backup)
+
+        return True, "Önceki orijinal durumuna geri döndürüldü."
+    except Exception as e:
+        return False, f"Geri alma hatası: {e}"
+
+
 def apply_disable_telemetry(enable=True, scope="all") -> Tuple[bool, str]:
     tweak_id = "disable_telemetry"
     key_path = r"SOFTWARE\Policies\Microsoft\Windows\DataCollection"
@@ -330,7 +375,10 @@ def apply_disable_telemetry(enable=True, scope="all") -> Tuple[bool, str]:
             return True, "Telemetri veri toplama izin verilen en alt seviyeye ayarlandı (Enterprise/Edu: Kapalı, Pro/Home: Temel seviye)."
         return False, "Telemetri kaydı yazılamadı (Yönetici izni gereklidir)."
     else:
-        # Geri alırken politika değerini tamamen sil (Varsayılan: Politika Tanımsız)
+        # Tekil kapatma çağrısında öncelikle orijinal yedeği geri yükle
+        reverted, msg = _revert_single_tweak(tweak_id, scope=scope)
+        if reverted:
+            return True, f"Telemetri {msg.lower()}"
         _safe_delete_reg_value(winreg.HKEY_LOCAL_MACHINE, key_path, "AllowTelemetry")
         return True, "Telemetri politikası temizlendi (Windows varsayılanına dönüldü)."
 
@@ -347,6 +395,10 @@ def apply_disable_bing_search(enable=True, scope="all") -> Tuple[bool, str]:
             return True, "Başlat menüsü web aramaları kapatıldı."
         return False, "Web aramaları kapatılırken bazı anahtarlar doğrulanamadı."
     else:
+        # Tekil kapatma çağrısında öncelikle orijinal yedeği geri yükle
+        reverted, msg = _revert_single_tweak(tweak_id, scope=scope)
+        if reverted:
+            return True, f"Web aramaları {msg.lower()}"
         _safe_delete_reg_value(winreg.HKEY_CURRENT_USER, p1, "DisableSearchBoxSuggestions")
         _safe_write_reg(winreg.HKEY_CURRENT_USER, "HKCU", p2, "BingSearchEnabled", winreg.REG_DWORD, 1, tweak_id)
         _safe_write_reg(winreg.HKEY_CURRENT_USER, "HKCU", p2, "CortanaConsent", winreg.REG_DWORD, 1, tweak_id)
@@ -772,12 +824,16 @@ def revert_all_tweaks(scope="all") -> List[Tuple[str, bool, str]]:
 
 def create_system_restore_point(description: str = "FormatSonrasi_Tweaks_Backup") -> Tuple[bool, str]:
     """İnce ayarlar öncesinde Windows Sistem Geri Yükleme Noktası (Restore Point) oluşturur.
-    Windows varsayılan olarak Sistem Koruması'nı kapalı getirebilir veya 24 saat kısıtlaması uygulayabilir.
+    Temiz kurulumlarda Sistem Koruması'nı açar ve 24 saat kısıtlamasını aşmak için frekansı ayarlar.
     """
     try:
         clean_desc = re.sub(r"[^A-Za-z0-9_\- ]", "", description)
         ps_cmd = (
             f"try {{ "
+            f"  $drive = if ($env:SystemDrive) {{ \"$($env:SystemDrive)\\\" }} else {{ \"C:\\\" }}; "
+            f"  Enable-ComputerRestore -Drive $drive -ErrorAction SilentlyContinue; "
+            f"  $reg = 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore'; "
+            f"  if (Test-Path $reg) {{ Set-ItemProperty -Path $reg -Name 'SystemRestorePointCreationFrequency' -Value 0 -Type DWord -ErrorAction SilentlyContinue }}; "
             f"  Checkpoint-Computer -Description '{clean_desc}' -RestorePointType 'MODIFY_SETTINGS' -ErrorAction Stop; "
             f"  exit 0 "
             f"}} catch {{ "
@@ -787,10 +843,12 @@ def create_system_restore_point(description: str = "FormatSonrasi_Tweaks_Backup"
         )
         ps_path = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell", "v1.0", "powershell.exe")
         creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
-        res = subprocess.run([ps_path, "-NoProfile", "-Command", ps_cmd], capture_output=True, text=True, timeout=35, creationflags=creationflags)
+        res = subprocess.run([ps_path, "-NoProfile", "-Command", ps_cmd], capture_output=True, text=True, timeout=90, creationflags=creationflags)
         if res.returncode == 0:
             return True, "Sistem geri yükleme noktası başarıyla oluşturuldu."
         err_detail = (res.stdout or res.stderr).strip()
+        if "1440" in err_detail or "frequency" in err_detail.lower():
+            return False, f"Sistem geri yükleme noktası oluşturulamadı (24 saat kısıtı devrede): {err_detail}"
         return False, f"Sistem geri yükleme noktası oluşturulamadı (Sistem Koruması kapalı olabilir veya 24 saat kısıtı devrede): {err_detail or 'Bilinmeyen neden'}"
     except Exception as e:
         logger.warning(f"Geri yükleme noktası çağrısı başarısız: {e}")
