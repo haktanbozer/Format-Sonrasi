@@ -1,0 +1,2590 @@
+{
+  "categories": [
+    {
+      "id": "developer",
+      "name": "Yazılımcı ve Geliştirici"
+    },
+    {
+      "id": "vs_family",
+      "name": "Visual Studio Sürümleri"
+    },
+    {
+      "id": "engineering",
+      "name": "Mühendislik ve CAD"
+    },
+    {
+      "id": "it_admin",
+      "name": "Sistem ve Ağ Yönetimi"
+    },
+    {
+      "id": "design_video",
+      "name": "Grafik ve Video Kurgu"
+    },
+    {
+      "id": "academic",
+      "name": "Eğitim ve Araştırma"
+    },
+    {
+      "id": "system",
+      "name": "Sistem ve Çalışma Zamanları"
+    },
+    {
+      "id": "browser",
+      "name": "İnternet Tarayıcıları"
+    },
+    {
+      "id": "basic",
+      "name": "Temel Araçlar ve Arşivleme"
+    },
+    {
+      "id": "office",
+      "name": "Ofis ve Belge Yönetimi"
+    },
+    {
+      "id": "media",
+      "name": "Medya ve Ses"
+    },
+    {
+      "id": "comm",
+      "name": "İletişim ve Toplantı"
+    },
+    {
+      "id": "gaming",
+      "name": "Oyun İstemcileri"
+    },
+    {
+      "id": "network",
+      "name": "Güvenlik ve Uzak Erişim"
+    }
+  ],
+  "conflict_groups": {
+    "archiver": "Arşiv Yöneticisi",
+    "office_suite": "Ofis Paketi",
+    "pdf_reader": "PDF Okuyucu",
+    "codec_pack": "Codec Paketi"
+  },
+  "profiles": [
+    {
+      "id": "basic",
+      "name": "Ev ve Temel Kullanıcı",
+      "desc": "Temel Sistem (10 Uygulama): Visual C++ AIO, .NET 10 Runtime, Chrome, 7-Zip, VLC, Everything, PDF24."
+    },
+    {
+      "id": "developer",
+      "name": "Yazılımcı ve Geliştirici",
+      "desc": "Yazılım Geliştirme (39 Uygulama): VS Code, VS Community 2026, Git, Python 3.14, Node, R, RStudio, JDK 21, Claude, Ollama, DBeaver, FileZilla."
+    },
+    {
+      "id": "engineering",
+      "name": "Mimar ve Mühendis",
+      "desc": "CAD ve Modelleme (17 Uygulama): DWG TrueView, FreeCAD, LibreCAD, KiCad, QGIS, Cura, PrusaSlicer, MeshLab, Blender, PDF24."
+    },
+    {
+      "id": "it_admin",
+      "name": "Sistem ve Ağ Yönetimi",
+      "desc": "BT ve Sistem Teşhis (26 Uygulama): Sysinternals Suite, Advanced IP Scanner, Nmap, MobaXterm, Rufus, Ventoy, AnyDesk, TeamViewer."
+    },
+    {
+      "id": "design_video",
+      "name": "Grafik ve Video Kurgu",
+      "desc": "Tasarım ve Kurgu (15 Uygulama): CapCut, Shotcut, Kdenlive, Krita, Inkscape, FontBase, GIMP, Blender, OBS Studio, HandBrake."
+    },
+    {
+      "id": "academic",
+      "name": "Eğitim ve Araştırma",
+      "desc": "Akademik Çalışma (16 Uygulama): Zotero, Obsidian, Notion, Anki, GeoGebra, MiKTeX, OnlyOffice, PDF24, Chrome."
+    },
+    {
+      "id": "gaming",
+      "name": "Oyuncu Paketi",
+      "desc": "Oyun ve İstemciler (18 Uygulama): Steam, Epic Games, Discord, VC++ AIO, DirectX, .NET 3.5, Java 8, 7-Zip, Spotify, qBittorrent."
+    },
+    {
+      "id": "office",
+      "name": "Ofis ve Çalışma",
+      "desc": "Ofis ve İletişim (13 Uygulama): ONLYOFFICE, Chrome, PDF24 Creator, 7-Zip, Zoom, WhatsApp, VC++ AIO."
+    }
+  ],
+  "applications": [
+    {
+      "id": "vscode",
+      "name": "Visual Studio Code",
+      "desc": "Microsoft tarafından geliştirilen açık kaynak kod ve metin editörü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudioCode",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "vscode_insiders",
+      "name": "Visual Studio Code Insiders",
+      "desc": "En yeni özellikleri içeren günlük derleme geliştirici sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudioCode.Insiders",
+      "weight": 2,
+      "size_mb": 100,
+      "profiles": []
+    },
+    {
+      "id": "vs_community_2026",
+      "name": "Visual Studio Community 2026",
+      "desc": "C#, C++, .NET ve web projeleri için en güncel ücretsiz entegre geliştirme ortamı.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.Community",
+      "weight": 4,
+      "size_mb": 2500,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "vs_pro_2026",
+      "name": "Visual Studio Professional 2026",
+      "desc": "Bireysel profesyoneller ve küçük ekipler için Visual Studio 2026 sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.Professional",
+      "weight": 4,
+      "size_mb": 2500,
+      "profiles": []
+    },
+    {
+      "id": "vs_ent_2026",
+      "name": "Visual Studio Enterprise 2026",
+      "desc": "Kurumsal ekipler ve ileri düzey mimari araçları için Visual Studio 2026.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.Enterprise",
+      "weight": 4,
+      "size_mb": 2600,
+      "profiles": []
+    },
+    {
+      "id": "vs_community_2022",
+      "name": "Visual Studio 2022 Community",
+      "desc": "64 bit mimariye sahip yaygın ve kararlı ücretsiz geliştirme ortamı.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2022.Community",
+      "weight": 4,
+      "size_mb": 2200,
+      "profiles": []
+    },
+    {
+      "id": "vs_pro_2022",
+      "name": "Visual Studio 2022 Professional",
+      "desc": "Visual Studio 2022 Professional geliştirici sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2022.Professional",
+      "weight": 4,
+      "size_mb": 2200,
+      "profiles": []
+    },
+    {
+      "id": "vs_ent_2022",
+      "name": "Visual Studio 2022 Enterprise",
+      "desc": "Visual Studio 2022 kurumsal sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2022.Enterprise",
+      "weight": 4,
+      "size_mb": 2300,
+      "profiles": []
+    },
+    {
+      "id": "vs_buildtools_2022",
+      "name": "Visual Studio 2022 Build Tools",
+      "desc": "Arayüzsüz C++ ve .NET projelerini derleme araç seti.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2022.BuildTools",
+      "weight": 3,
+      "size_mb": 600,
+      "profiles": []
+    },
+    {
+      "id": "vs_community_2019",
+      "name": "Visual Studio 2019 Community",
+      "desc": "Eski projelere uyumluluk için Visual Studio 2019 topluluk sürümü.",
+      "category": "vs_family",
+      "winget_id": "direct.vs2019_community",
+      "install_type": "direct_exe",
+      "download_url": "https://aka.ms/vs/16/release/vs_community.exe",
+      "publisher": "Microsoft Corporation",
+      "silent_args": [
+        "--quiet",
+        "--wait",
+        "--norestart"
+      ],
+      "weight": 4,
+      "size_mb": 2000,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%ProgramFiles(x86)%\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.exe"
+        ],
+        "registry_names": [
+          "Visual Studio Community 2019",
+          "Visual Studio 2019"
+        ]
+      }
+    },
+    {
+      "id": "vs_pro_2019",
+      "name": "Visual Studio 2019 Professional",
+      "desc": "Visual Studio 2019 Professional geliştirici sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2019.Professional",
+      "weight": 4,
+      "size_mb": 2000,
+      "profiles": []
+    },
+    {
+      "id": "vs_ent_2019",
+      "name": "Visual Studio 2019 Enterprise",
+      "desc": "Visual Studio 2019 kurumsal sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2019.Enterprise",
+      "weight": 4,
+      "size_mb": 2100,
+      "profiles": []
+    },
+    {
+      "id": "vs_buildtools_2019",
+      "name": "Visual Studio 2019 Build Tools",
+      "desc": "Visual Studio 2019 derleme ve araç zinciri paketi.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2019.BuildTools",
+      "weight": 3,
+      "size_mb": 500,
+      "profiles": []
+    },
+    {
+      "id": "vs_community_2017",
+      "name": "Visual Studio 2017 Community",
+      "desc": "Visual Studio 2017 ücretsiz topluluk sürümü.",
+      "category": "vs_family",
+      "winget_id": "direct.vs2017_community",
+      "install_type": "direct_exe",
+      "download_url": "https://aka.ms/vs/15/release/vs_community.exe",
+      "publisher": "Microsoft Corporation",
+      "silent_args": [
+        "--quiet",
+        "--wait",
+        "--norestart"
+      ],
+      "weight": 4,
+      "size_mb": 1800,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%ProgramFiles(x86)%\\Microsoft Visual Studio\\2017\\Community\\Common7\\IDE\\devenv.exe"
+        ],
+        "registry_names": [
+          "Visual Studio Community 2017",
+          "Visual Studio 2017"
+        ]
+      }
+    },
+    {
+      "id": "vs_ent_2017",
+      "name": "Visual Studio 2017 Enterprise",
+      "desc": "Visual Studio 2017 kurumsal sürümü.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2017.Enterprise",
+      "weight": 4,
+      "size_mb": 1900,
+      "profiles": []
+    },
+    {
+      "id": "vs_buildtools_2017",
+      "name": "Visual Studio 2017 Build Tools",
+      "desc": "Visual Studio 2017 derleme araçları paketi.",
+      "category": "vs_family",
+      "winget_id": "Microsoft.VisualStudio.2017.BuildTools",
+      "weight": 3,
+      "size_mb": 450,
+      "profiles": []
+    },
+    {
+      "id": "git",
+      "name": "Git for Windows (Git Bash)",
+      "desc": "Versiyon kontrol sistemi ve Git Bash komut satırı aracı.",
+      "category": "developer",
+      "winget_id": "Git.Git",
+      "weight": 2,
+      "size_mb": 55,
+      "profiles": [
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\Git\\cmd\\git.exe",
+          "%ProgramFiles(x86)%\\Git\\cmd\\git.exe"
+        ],
+        "registry_names": [
+          "Git version",
+          "Git for Windows"
+        ]
+      }
+    },
+    {
+      "id": "github_desktop",
+      "name": "GitHub Desktop",
+      "desc": "Git depolarını grafiksel arayüzle yönetme yazılımı.",
+      "category": "developer",
+      "winget_id": "GitHub.GitHubDesktop",
+      "weight": 2,
+      "size_mb": 130,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "github_cli",
+      "name": "GitHub CLI (gh)",
+      "desc": "Terminal üzerinden GitHub repo, issue ve Pull Request yönetimi sağlayan resmi CLI aracı.",
+      "category": "developer",
+      "winget_id": "GitHub.cli",
+      "weight": 1,
+      "size_mb": 10,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "lazygit",
+      "name": "LazyGit",
+      "desc": "Terminal içinde klavye odaklı, aşırı hızlı görsel Git yönetim arayüzü (TUI).",
+      "category": "developer",
+      "winget_id": "JesseDuffield.lazygit",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "tortoisegit",
+      "name": "TortoiseGit",
+      "desc": "Windows Dosya Gezgini sağ tık menüsüne entegre görsel Git istemcisi ve çakışma çözücü.",
+      "category": "developer",
+      "winget_id": "TortoiseGit.TortoiseGit",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "gitkraken",
+      "name": "GitKraken",
+      "desc": "Gelişmiş dal grafiği ve görsel merge çakışma çözücüye sahip profesyonel masaüstü Git istemcisi.",
+      "category": "developer",
+      "winget_id": "Axosoft.GitKraken",
+      "weight": 3,
+      "size_mb": 175,
+      "profiles": []
+    },
+    {
+      "id": "python",
+      "name": "Python 3.14 (Resmi)",
+      "desc": "Yazılım, betik ve veri analizi programlama dili çalışma ortamı.",
+      "category": "developer",
+      "winget_id": "Python.Python.3.14",
+      "weight": 2,
+      "size_mb": 26,
+      "profiles": [
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%LocalAppData%\\Programs\\Python\\Launcher\\py.exe"
+        ],
+        "registry_names": [
+          "Python 3.14"
+        ]
+      }
+    },
+    {
+      "id": "nodejs_lts",
+      "name": "Node.js (LTS)",
+      "desc": "JavaScript sunucu çalışma zamanı ve npm paket yöneticisi.",
+      "category": "developer",
+      "winget_id": "OpenJS.NodeJS.LTS",
+      "weight": 2,
+      "size_mb": 32,
+      "profiles": [
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\nodejs\\node.exe"
+        ],
+        "registry_names": [
+          "Node.js"
+        ]
+      }
+    },
+    {
+      "id": "r_project",
+      "name": "R for Windows",
+      "desc": "İstatistiksel hesaplama ve grafik üretimi programlama dili.",
+      "category": "developer",
+      "winget_id": "RProject.R",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": [
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "rstudio",
+      "name": "Posit RStudio Desktop",
+      "desc": "R dili ve veri bilimi projeleri için geliştirme ortamı.",
+      "category": "developer",
+      "winget_id": "Posit.RStudio",
+      "weight": 3,
+      "size_mb": 220,
+      "profiles": [
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "claude_desktop",
+      "name": "Claude Desktop (Anthropic)",
+      "desc": "Anthropic Claude masaüstü yapay zeka istemcisi.",
+      "category": "developer",
+      "winget_id": "Anthropic.Claude",
+      "weight": 2,
+      "size_mb": 90,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama (Yerel LLM)",
+      "desc": "Büyük dil modellerini yerel bilgisayarda çalıştırma aracı.",
+      "category": "developer",
+      "winget_id": "Ollama.Ollama",
+      "weight": 3,
+      "size_mb": 280,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "dbeaver",
+      "name": "DBeaver Community",
+      "desc": "Çoklu veritabanı yönetim ve sorgulama yazılımı.",
+      "category": "developer",
+      "winget_id": "DBeaver.DBeaver.Community",
+      "weight": 2,
+      "size_mb": 80,
+      "profiles": [
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\DBeaver\\dbeaver.exe"
+        ],
+        "registry_names": [
+          "DBeaver Community",
+          "DBeaver"
+        ]
+      }
+    },
+    {
+      "id": "sqlite_browser",
+      "name": "DB Browser for SQLite",
+      "desc": "SQLite veritabanlarını görsel olarak tasarlamak, düzenlemek ve sorgulamak için hafif açık kaynak araç.",
+      "category": "developer",
+      "winget_id": "DBBrowserForSQLite.DBBrowserForSQLite",
+      "weight": 2,
+      "size_mb": 25,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "postman",
+      "name": "Postman",
+      "desc": "REST API tasarımı, testi ve dokümantasyonu aracı.",
+      "category": "developer",
+      "winget_id": "Postman.Postman",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "insomnia",
+      "name": "Insomnia (API İstemcisi)",
+      "desc": "REST, GraphQL, gRPC ve WebSocket API testleri için açık kaynaklı masaüstü istemcisi.",
+      "category": "developer",
+      "winget_id": "Insomnia.Insomnia",
+      "weight": 2,
+      "size_mb": 120,
+      "profiles": []
+    },
+    {
+      "id": "filezilla",
+      "name": "FileZilla FTP İstemcisi",
+      "desc": "FTP, FTPS ve SFTP protokolleriyle dosya aktarım istemcisi.",
+      "category": "developer",
+      "winget_id": "custom.filezilla",
+      "install_type": "filezilla_clean",
+      "publisher": "Tim Kosse",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\FileZilla FTP Client\\filezilla.exe",
+          "%ProgramFiles(x86)%\\FileZilla FTP Client\\filezilla.exe"
+        ],
+        "registry_names": [
+          "FileZilla Client",
+          "FileZilla"
+        ]
+      }
+    },
+    {
+      "id": "docker_desktop",
+      "name": "Docker Desktop",
+      "desc": "Konteyner oluşturma ve yönetme masaüstü ortamı.",
+      "category": "developer",
+      "winget_id": "Docker.DockerDesktop",
+      "weight": 3,
+      "size_mb": 580,
+      "profiles": []
+    },
+    {
+      "id": "pycharm_ce",
+      "name": "PyCharm Community",
+      "desc": "JetBrains tarafından geliştirilen ücretsiz Python geliştirme ortamı.",
+      "category": "developer",
+      "winget_id": "JetBrains.PyCharm.Community",
+      "weight": 3,
+      "size_mb": 450,
+      "profiles": []
+    },
+    {
+      "id": "intellij_ce",
+      "name": "IntelliJ IDEA Community",
+      "desc": "Java ve Kotlin projeleri için ücretsiz geliştirici ortamı.",
+      "category": "developer",
+      "winget_id": "JetBrains.IntelliJIDEA.Community",
+      "weight": 3,
+      "size_mb": 550,
+      "profiles": []
+    },
+    {
+      "id": "rustup",
+      "name": "Rustup (Rust Dili)",
+      "desc": "Rust programlama dili derleyicisi ve yönetim aracı.",
+      "category": "developer",
+      "winget_id": "Rustlang.Rustup",
+      "weight": 1,
+      "size_mb": 10,
+      "profiles": []
+    },
+    {
+      "id": "golang",
+      "name": "Go (Golang)",
+      "desc": "Google tarafından geliştirilen açık kaynak sistem programlama dili.",
+      "category": "developer",
+      "winget_id": "GoLang.Go",
+      "weight": 2,
+      "size_mb": 120,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "C:\\Program Files\\Go\\bin\\go.exe"
+        ],
+        "registry_names": [
+          "Go Programming Language"
+        ]
+      }
+    },
+    {
+      "id": "android_studio",
+      "name": "Android Studio",
+      "desc": "Google resmi Android uygulama geliştirme ortamı (IDE), SDK yöneticisi ve emülatör.",
+      "category": "developer",
+      "winget_id": "Google.AndroidStudio",
+      "weight": 4,
+      "size_mb": 1100,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\Android\\Android Studio\\bin\\studio64.exe"
+        ],
+        "registry_names": [
+          "Android Studio"
+        ]
+      }
+    },
+    {
+      "id": "android_platform_tools",
+      "name": "Android SDK Platform-Tools (ADB ve Fastboot)",
+      "desc": "Android cihazlarla hata ayıklama, paket yükleme ve ROM yönetimi için ADB ve Fastboot araçları.",
+      "category": "developer",
+      "winget_id": "Google.PlatformTools",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": []
+    },
+    {
+      "id": "scrcpy",
+      "name": "scrcpy (Android Ekran Yansıtma ve Kontrol)",
+      "desc": "Android cihazın ekranını USB veya Wi-Fi üzerinden bilgisayara yansıtan ve klavye/fare ile kontrol eden geliştirici aracı.",
+      "category": "developer",
+      "winget_id": "Genymobile.scrcpy",
+      "weight": 1,
+      "size_mb": 8,
+      "profiles": []
+    },
+    {
+      "id": "powershell_7",
+      "name": "PowerShell 7",
+      "desc": "Modern ve çapraz platform komut satırı kabuğu.",
+      "category": "developer",
+      "winget_id": "Microsoft.PowerShell",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "windows_terminal",
+      "name": "Windows Terminal",
+      "desc": "PowerShell, CMD ve WSL2 için sekmeli, modern ve GPU hızlandırmalı Microsoft terminal ortamı.",
+      "category": "developer",
+      "winget_id": "Microsoft.WindowsTerminal",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "neovim",
+      "name": "Neovim",
+      "desc": "Genişletilebilir, hızlı ve modern komut satırı metin ve kod editörü.",
+      "category": "developer",
+      "winget_id": "Neovim.Neovim",
+      "weight": 2,
+      "size_mb": 30,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "putty",
+      "name": "PuTTY",
+      "desc": "SSH ve Telnet protokolleri için hafif terminal bağlantı aracı.",
+      "category": "developer",
+      "winget_id": "PuTTY.PuTTY",
+      "weight": 1,
+      "size_mb": 3,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "winscp",
+      "name": "WinSCP",
+      "desc": "SFTP ve FTP protokolleri üzerinden güvenli dosya aktarım aracı.",
+      "category": "developer",
+      "winget_id": "WinSCP.WinSCP",
+      "weight": 1,
+      "size_mb": 11,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "dwg_trueview",
+      "name": "Autodesk DWG TrueView 2027",
+      "desc": "AutoCAD çizimlerini (.DWG, .DXF) ücretsiz görüntüleme ve dönüştürme yazılımı.",
+      "category": "engineering",
+      "winget_id": "Autodesk.DWGTrueView.2027",
+      "weight": 4,
+      "size_mb": 1100,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "freecad",
+      "name": "FreeCAD",
+      "desc": "Mekanik ve mimari tasarımlar için açık kaynak 3D parametrik modelleme yazılımı.",
+      "category": "engineering",
+      "winget_id": "FreeCAD.FreeCAD",
+      "weight": 3,
+      "size_mb": 490,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "librecad",
+      "name": "LibreCAD",
+      "desc": "İki boyutlu mühendislik ve mimari çizimler için açık kaynak CAD yazılımı.",
+      "category": "engineering",
+      "winget_id": "LibreCAD.LibreCAD",
+      "weight": 2,
+      "size_mb": 30,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "kicad",
+      "name": "KiCad EDA",
+      "desc": "Elektronik devre şeması çizimi ve baskı devre kartı (PCB) tasarım paketi.",
+      "category": "engineering",
+      "winget_id": "KiCad.KiCad",
+      "weight": 3,
+      "size_mb": 380,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "qgis",
+      "name": "QGIS Desktop",
+      "desc": "Coğrafi bilgi sistemleri (CBS) veri analizi ve haritalama platformu.",
+      "category": "engineering",
+      "winget_id": "OSGeo.QGIS",
+      "weight": 4,
+      "size_mb": 1050,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "ultimaker_cura",
+      "name": "UltiMaker Cura",
+      "desc": "3D yazıcılar için katman dilimleme ve baskı hazırlama yazılımı.",
+      "category": "engineering",
+      "winget_id": "Ultimaker.Cura",
+      "weight": 3,
+      "size_mb": 290,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "prusaslicer",
+      "name": "PrusaSlicer",
+      "desc": "Açık kaynak 3D yazıcı dilimleme ve üretim programı.",
+      "category": "engineering",
+      "winget_id": "Prusa3D.PrusaSlicer",
+      "weight": 2,
+      "size_mb": 110,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "meshlab",
+      "name": "MeshLab",
+      "desc": "3D nokta bulutu ve yüzey ağlarını düzenleme ve temizleme yazılımı.",
+      "category": "engineering",
+      "winget_id": "CNRISTI.MeshLab",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "engineering"
+      ]
+    },
+    {
+      "id": "openscad",
+      "name": "OpenSCAD",
+      "desc": "Programcılar ve mühendisler için kod tabanlı katı 3D CAD modelleme aracı.",
+      "category": "engineering",
+      "winget_id": "OpenSCAD.OpenSCAD",
+      "weight": 2,
+      "size_mb": 30,
+      "profiles": []
+    },
+    {
+      "id": "solvespace",
+      "name": "SolveSpace",
+      "desc": "Kısıtlama tabanlı, ultra hafif 2D/3D parametrik mekanik CAD programı.",
+      "category": "engineering",
+      "winget_id": "SolveSpace.SolveSpace",
+      "weight": 1,
+      "size_mb": 10,
+      "profiles": []
+    },
+    {
+      "id": "sweethome3d",
+      "name": "Sweet Home 3D",
+      "desc": "Mimari kat planı ve 3D iç mekan tasarımı açık kaynak yazılımı.",
+      "category": "engineering",
+      "winget_id": "eTeks.SweetHome3D",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": []
+    },
+    {
+      "id": "cloudcompare",
+      "name": "CloudCompare",
+      "desc": "3D nokta bulutu (LiDAR/harita) ve üçgen ağları işleme ve karşılaştırma aracı.",
+      "category": "engineering",
+      "winget_id": "CloudCompare.CloudCompare",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": []
+    },
+    {
+      "id": "ltspice",
+      "name": "Analog Devices LTspice",
+      "desc": "Endüstri standardı yüksek hızlı SPICE analog ve dijital devre simülatörü.",
+      "category": "engineering",
+      "winget_id": "AnalogDevices.LTspice",
+      "weight": 2,
+      "size_mb": 60,
+      "profiles": []
+    },
+    {
+      "id": "logisim_evolution",
+      "name": "Logisim-evolution",
+      "desc": "Sayısal mantık devreleri ve CPU mimarisi tasarım ve simülasyon aracı.",
+      "category": "engineering",
+      "winget_id": "logisim-evolution.logisim-evolution",
+      "weight": 2,
+      "size_mb": 90,
+      "profiles": []
+    },
+    {
+      "id": "gnu_octave",
+      "name": "GNU Octave",
+      "desc": "MATLAB ile yüksek oranda uyumlu açık kaynak sayısal hesaplama ve analiz ortamı.",
+      "category": "engineering",
+      "winget_id": "GNU.Octave",
+      "weight": 3,
+      "size_mb": 320,
+      "profiles": []
+    },
+    {
+      "id": "scilab",
+      "name": "Scilab",
+      "desc": "Sayısal analiz ve Xcos blok diyagram simülasyon ortamı (Simulink dengi).",
+      "category": "engineering",
+      "winget_id": "Scilab.Scilab",
+      "weight": 3,
+      "size_mb": 210,
+      "profiles": []
+    },
+    {
+      "id": "orcaslicer",
+      "name": "OrcaSlicer",
+      "desc": "Dahili kalibrasyon testlerine sahip popüler modern 3D yazıcı dilimleyicisi.",
+      "category": "engineering",
+      "winget_id": "SoftFever.OrcaSlicer",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": []
+    },
+    {
+      "id": "bambu_studio",
+      "name": "Bambu Studio",
+      "desc": "Bambu Lab ve yüksek hızlı 3D yazıcılar için optimize edilmiş açık kaynak dilimleyici.",
+      "category": "engineering",
+      "winget_id": "Bambulab.Bambustudio",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": []
+    },
+    {
+      "id": "arduino_ide",
+      "name": "Arduino IDE",
+      "desc": "Arduino ve mikrodenetleyici kartları için resmi geliştirme ortamı.",
+      "category": "engineering",
+      "winget_id": "ArduinoSA.IDE.stable",
+      "weight": 3,
+      "size_mb": 170,
+      "profiles": []
+    },
+    {
+      "id": "serial_studio",
+      "name": "Serial Studio",
+      "desc": "Gömülü sistemler ve sensörler için gerçek zamanlı telemetri ve veri görselleştirme panosu.",
+      "category": "engineering",
+      "winget_id": "SerialStudio.SerialStudio",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": []
+    },
+    {
+      "id": "qelectrotech",
+      "name": "QElectroTech",
+      "desc": "Elektrik panoları, otomasyon şemaları, hidrolik ve pnömatik hat çizim yazılımı.",
+      "category": "engineering",
+      "winget_id": "QElectroTech.QElectroTech",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": []
+    },
+    {
+      "id": "smath_studio",
+      "name": "SMath Studio",
+      "desc": "Birim dönüşümlü ve formül sayfalı matematiksel mühendislik hesap defteri (Mathcad dengi).",
+      "category": "engineering",
+      "winget_id": "SMath.SMathStudio",
+      "weight": 2,
+      "size_mb": 15,
+      "profiles": []
+    },
+    {
+      "id": "wings_3d",
+      "name": "Wings 3D",
+      "desc": "Subdivision yüzey tekniğiyle çalışan hafif ve açık kaynaklı 3D modelleme aracı.",
+      "category": "engineering",
+      "winget_id": "Wings3D.Wings3D",
+      "weight": 2,
+      "size_mb": 18,
+      "profiles": []
+    },
+    {
+      "id": "sysinternals",
+      "name": "Microsoft Sysinternals Suite",
+      "desc": "Process Explorer, Autoruns ve ProcMon gibi resmi Windows teşhis araçları.",
+      "category": "it_admin",
+      "winget_id": "Microsoft.Sysinternals.Suite",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "advanced_ip_scanner",
+      "name": "Advanced IP Scanner",
+      "desc": "Yerel ağ cihazlarını ve paylaşılan kaynakları tarama aracı.",
+      "category": "it_admin",
+      "winget_id": "Famatech.AdvancedIPScanner",
+      "weight": 1,
+      "size_mb": 10,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "nmap",
+      "name": "Nmap ve Zenmap",
+      "desc": "Ağ keşfi ve port güvenliği analizi aracı.",
+      "category": "it_admin",
+      "winget_id": "Insecure.Nmap",
+      "weight": 2,
+      "size_mb": 28,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "mobaxterm",
+      "name": "MobaXterm Home Edition",
+      "desc": "Sekmeli terminal, SSH, RDP ve X11 sunuculu bağlantı yönetim aracı.",
+      "category": "it_admin",
+      "winget_id": "Mobatek.MobaXterm",
+      "weight": 2,
+      "size_mb": 30,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "rufus",
+      "name": "Rufus",
+      "desc": "Önyüklenebilir USB kurulum medyası hazırlama yazılımı.",
+      "category": "it_admin",
+      "winget_id": "Rufus.Rufus",
+      "weight": 1,
+      "size_mb": 2,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "ventoy",
+      "name": "Ventoy",
+      "desc": "ISO dosyalarını doğrudan belleğe atarak çoklu sistem başlatan araç.",
+      "category": "it_admin",
+      "winget_id": "Ventoy.Ventoy",
+      "weight": 2,
+      "size_mb": 16,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "anydesk",
+      "name": "AnyDesk",
+      "desc": "Uzak masaüstü bağlantısı ve teknik destek istemcisi.",
+      "category": "it_admin",
+      "winget_id": "AnyDesk.AnyDesk",
+      "weight": 1,
+      "size_mb": 6,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "teamviewer",
+      "name": "TeamViewer",
+      "desc": "Kurumsal uzak destek ve masaüstü paylaşım yazılımı.",
+      "category": "it_admin",
+      "winget_id": "TeamViewer.TeamViewer",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "capcut",
+      "name": "CapCut Desktop",
+      "desc": "Hızlı kurgu ve içerik üretimi için modern video düzenleyici.",
+      "category": "design_video",
+      "winget_id": "ByteDance.CapCut",
+      "weight": 3,
+      "size_mb": 450,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "shotcut",
+      "name": "Shotcut Video Editor",
+      "desc": "Açık kaynak, reklamsız ve çok kanallı video düzenleme programı.",
+      "category": "design_video",
+      "winget_id": "Meltytech.Shotcut",
+      "weight": 2,
+      "size_mb": 110,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "kdenlive",
+      "name": "Kdenlive",
+      "desc": "KDE tarafından geliştirilen açık kaynak video montaj stüdyosu.",
+      "category": "design_video",
+      "winget_id": "KDE.Kdenlive",
+      "weight": 3,
+      "size_mb": 170,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "krita",
+      "name": "Krita",
+      "desc": "Dijital illüstrasyon ve konsept çizim için açık kaynak yazılım.",
+      "category": "design_video",
+      "winget_id": "KDE.Krita",
+      "weight": 3,
+      "size_mb": 240,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "inkscape",
+      "name": "Inkscape",
+      "desc": "Vektörel grafik ve çizim düzenleme programı.",
+      "category": "design_video",
+      "winget_id": "Inkscape.Inkscape",
+      "weight": 2,
+      "size_mb": 130,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "fontbase",
+      "name": "FontBase",
+      "desc": "Tasarımcılar için hızlı yazı tipi yönetim ve katalog aracı.",
+      "category": "design_video",
+      "winget_id": "Levitsky.FontBase",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "gimp",
+      "name": "GIMP",
+      "desc": "Katman destekli açık kaynak resim ve fotoğraf düzenleyici.",
+      "category": "design_video",
+      "winget_id": "GIMP.GIMP",
+      "weight": 3,
+      "size_mb": 310,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "paint_net",
+      "name": "Paint.NET",
+      "desc": "Kullanımı kolay ve katman destekli fotoğraf düzenleme yazılımı.",
+      "category": "design_video",
+      "winget_id": "dotPDN.PaintDotNet",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "blender",
+      "name": "Blender",
+      "desc": "Üç boyutlu modelleme, kaplama, animasyon ve render yazılımı.",
+      "category": "design_video",
+      "winget_id": "BlenderFoundation.Blender",
+      "weight": 3,
+      "size_mb": 360,
+      "profiles": [
+        "engineering",
+        "design_video"
+      ]
+    },
+    {
+      "id": "zotero",
+      "name": "Zotero",
+      "desc": "Akademik makale, tez ve araştırmalar için kaynakça yönetim programı.",
+      "category": "academic",
+      "winget_id": "DigitalScholar.Zotero",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "desc": "Yerel Markdown dosyalarıyla bağlantılı not alma ve bilgi tabanı aracı.",
+      "category": "academic",
+      "winget_id": "Obsidian.Obsidian",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": [
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "desc": "Çalışma planı, not ve doküman organizasyonu platformu.",
+      "category": "academic",
+      "winget_id": "Notion.Notion",
+      "weight": 2,
+      "size_mb": 90,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "anki",
+      "name": "Anki",
+      "desc": "Aralıklı tekrar yöntemiyle bilgi ve dil öğrenme yazılımı.",
+      "category": "academic",
+      "winget_id": "Anki.Anki",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "geogebra",
+      "name": "GeoGebra Classic",
+      "desc": "Geometri, cebir ve analiz konuları için dinamik matematik yazılımı.",
+      "category": "academic",
+      "winget_id": "GeoGebra.Classic",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "miktex",
+      "name": "MiKTeX",
+      "desc": "Bilimsel yayın ve teknik raporlar için modern LaTeX dağıtımı.",
+      "category": "academic",
+      "winget_id": "MiKTeX.MiKTeX",
+      "weight": 3,
+      "size_mb": 260,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "texstudio",
+      "name": "TeXstudio",
+      "desc": "Anlık PDF önizlemeli ve gelişmiş formül destekli açık kaynak LaTeX editörü.",
+      "category": "academic",
+      "winget_id": "TeXstudio.TeXstudio",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": [
+        "academic"
+      ]
+    },
+    {
+      "id": "mendeley",
+      "name": "Mendeley Reference Manager",
+      "desc": "Elsevier tarafından sunulan akademik makale, kaynakça ve PDF yönetim aracı.",
+      "category": "academic",
+      "winget_id": "Elsevier.MendeleyReferenceManager",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": []
+    },
+    {
+      "id": "jabref",
+      "name": "JabRef",
+      "desc": "LaTeX ve BibTeX formatlı açık kaynak akademik kaynakça ve atıf yöneticisi.",
+      "category": "academic",
+      "winget_id": "JabRef.JabRef",
+      "weight": 2,
+      "size_mb": 120,
+      "profiles": []
+    },
+    {
+      "id": "jasp",
+      "name": "JASP",
+      "desc": "SPSS alternatifi, Bayesyen ve klasik modelleri destekleyen açık kaynak istatistik yazılımı.",
+      "category": "academic",
+      "winget_id": "JASP.JASP",
+      "weight": 4,
+      "size_mb": 750,
+      "profiles": []
+    },
+    {
+      "id": "jamovi",
+      "name": "Jamovi",
+      "desc": "R istatistik motoru üzerine kurulu, sezgisel ve modern açık kaynak veri analizi aracı.",
+      "category": "academic",
+      "winget_id": "Jamovi.Desktop.Current",
+      "weight": 3,
+      "size_mb": 420,
+      "profiles": []
+    },
+    {
+      "id": "stellarium",
+      "name": "Stellarium",
+      "desc": "Açık kaynaklı 3D planetaryum, gökyüzü haritası ve astronomi simülasyonu.",
+      "category": "academic",
+      "winget_id": "Stellarium.Stellarium",
+      "weight": 3,
+      "size_mb": 450,
+      "profiles": []
+    },
+    {
+      "id": "google_earth_pro",
+      "name": "Google Earth Pro",
+      "desc": "Geçmiş uydu görüntüleri, 3D arazi ve coğrafi ölçüm araçları içeren masaüstü yerküre.",
+      "category": "academic",
+      "winget_id": "Google.EarthPro",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": []
+    },
+    {
+      "id": "avogadro2",
+      "name": "Avogadro 2",
+      "desc": "Kimya, malzeme bilimi ve biyoloji için 3D molekül editörü ve görselleştirici.",
+      "category": "academic",
+      "winget_id": "OpenChemistry.Avogadro2",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": []
+    },
+    {
+      "id": "vcredist_aio",
+      "name": "Visual C++ Redistributable AIO (2005-2022)",
+      "desc": "Tüm Visual C++ kütüphanelerinin tek seferde kurulum paketi.",
+      "category": "system",
+      "winget_id": "abbodi1406.vcredist",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": [
+        "basic",
+        "engineering",
+        "gaming",
+        "it_admin",
+        "office",
+        "developer"
+      ]
+    },
+    {
+      "id": "dotnet_runtime_11_preview",
+      "name": ".NET 11.0 Preview Desktop Runtime [Önizleme]",
+      "desc": "Microsoft .NET 11.0 önizleme sürümü masaüstü çalışma zamanı kütüphanesi (Geliştirici testi amaçlıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.Preview",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_10",
+      "name": ".NET 10.0 Desktop Runtime",
+      "desc": "Modern Windows uygulamalarının çalışması için temel LTS .NET 10 bileşeni.",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.10",
+      "weight": 2,
+      "size_mb": 60,
+      "profiles": [
+        "basic",
+        "engineering",
+        "gaming",
+        "office",
+        "developer"
+      ]
+    },
+    {
+      "id": "dotnet_runtime_9",
+      "name": ".NET 9.0 Desktop Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET 9 tabanlı uygulamalar için çalışma zamanı paketi. (Resmi desteği bitmiş eski sürümdür).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.9",
+      "weight": 2,
+      "size_mb": 58,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_8",
+      "name": ".NET 8.0 Desktop Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET 8 tabanlı uygulamalar için çalışma zamanı paketi. (Resmi desteği bitmiş eski sürümdür).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.8",
+      "weight": 2,
+      "size_mb": 55,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_7",
+      "name": ".NET 7.0 Desktop Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET 7 tabanlı uygulamalar için çalışma zamanı paketi. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.7",
+      "weight": 2,
+      "size_mb": 54,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_6",
+      "name": ".NET 6.0 Desktop Runtime (LTS)",
+      "desc": ".NET 6 LTS destekli uygulamalar için çalışma zamanı paketi.",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.6",
+      "weight": 2,
+      "size_mb": 52,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_5",
+      "name": ".NET 5.0 Desktop Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET 5 tabanlı masaüstü uygulamaları için çalışma zamanı paketi. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.5",
+      "weight": 2,
+      "size_mb": 50,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_31",
+      "name": ".NET Core 3.1 Desktop Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET Core 3.1 tabanlı eski masaüstü uygulamaları için çalışma zamanı. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.DesktopRuntime.3_1",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_22",
+      "name": ".NET Core 2.2 Runtime [EOL - Desteği Bitti]",
+      "desc": ".NET Core 2.2 tabanlı uygulamalar için çalışma zamanı bileşeni. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.Runtime.2_2",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_runtime_21",
+      "name": "ASP.NET Core Runtime 2.1 [EOL - Desteği Bitti]",
+      "desc": "ASP.NET Core 2.1 tabanlı web ve konsol uygulamaları için çalışma zamanı kütüphanesi. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.AspNetCore.2_1",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_framework_35",
+      "name": ".NET Framework 3.5 (2.0 ve 3.0 Dahil)",
+      "desc": "Eski Windows uygulamaları ve klasik oyunlar için gerekli Windows özelliği.",
+      "category": "system",
+      "winget_id": "dism.NetFx3",
+      "install_type": "dism_feature",
+      "feature_name": "NetFx3",
+      "weight": 2,
+      "size_mb": 40,
+      "profiles": [
+        "engineering",
+        "gaming"
+      ],
+      "verify": {
+        "files": [
+          "%windir%\\Microsoft.NET\\Framework\\v3.5\\csc.exe",
+          "%windir%\\Microsoft.NET\\Framework64\\v3.5\\csc.exe"
+        ]
+      }
+    },
+    {
+      "id": "dotnet_framework_481",
+      "name": ".NET Framework 4.8.1 Geliştirici Paketi",
+      "desc": ".NET Framework 4 tabanlı uygulamalar için en güncel çalışma ortamı.",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.Framework.DeveloperPack_4",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "dotnet_framework_462",
+      "name": ".NET Framework 4.6.2 Geliştirici Paketi [Eski Sürüm]",
+      "desc": ".NET Framework 4.6 tabanlı uygulamalar için geliştirici ve hedefleme paketi.",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.Framework.DeveloperPack.4.6",
+      "weight": 2,
+      "size_mb": 80,
+      "profiles": []
+    },
+    {
+      "id": "dotnet_framework_45",
+      "name": ".NET Framework 4.5.1/4.5.2 Geliştirici Paketi [EOL - Desteği Bitti]",
+      "desc": ".NET Framework 4.5 tabanlı eski uygulamalar için geliştirici ve hedefleme paketi. (Resmi desteği bitmiş eski sürümdür; güvenlik açısından yalnızca zorunlu eski yazılımlar için kurulmalıdır).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.Framework.DeveloperPack.4.5",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": []
+    },
+    {
+      "id": "java_8_jre",
+      "name": "Java 8 Runtime (Oracle JRE 8)",
+      "desc": "Java 8 gerektiren uygulamalar ve oyunlar için resmi çalışma zamanı.",
+      "category": "system",
+      "winget_id": "Oracle.JavaRuntimeEnvironment",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [
+        "gaming"
+      ]
+    },
+    {
+      "id": "jdk_temurin_17",
+      "name": "Eclipse Temurin JDK 17 (LTS)",
+      "desc": "Kurumsal ve kararlı açık kaynak Java 17 geliştirme kiti.",
+      "category": "system",
+      "winget_id": "EclipseAdoptium.Temurin.17.JDK",
+      "weight": 3,
+      "size_mb": 175,
+      "profiles": []
+    },
+    {
+      "id": "jdk_temurin_21",
+      "name": "Eclipse Temurin JDK 21 (LTS)",
+      "desc": "En güncel açık kaynak Java 21 LTS geliştirme kiti.",
+      "category": "system",
+      "winget_id": "EclipseAdoptium.Temurin.21.JDK",
+      "weight": 3,
+      "size_mb": 185,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "directx",
+      "name": "DirectX End-User Runtime",
+      "desc": "Oyun ve multimedya için DirectX kütüphaneleri bileşeni.",
+      "category": "system",
+      "winget_id": "Microsoft.DirectX",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "engineering",
+        "gaming"
+      ]
+    },
+    {
+      "id": "webview2_runtime",
+      "name": "Microsoft Edge WebView2 Runtime",
+      "desc": "Modern masaüstü uygulamaları (Teams, Claude, Discord) için Chromium tarayıcı motoru.",
+      "category": "system",
+      "winget_id": "Microsoft.EdgeWebView2Runtime",
+      "weight": 1,
+      "size_mb": 2,
+      "profiles": [
+        "basic",
+        "office",
+        "developer"
+      ]
+    },
+    {
+      "id": "windows_app_runtime",
+      "name": "Windows App Runtime (WinUI 3)",
+      "desc": "Modern Windows 10/11 WinUI 3 ve Windows App SDK uygulamaları için çalışma ortamı.",
+      "category": "system",
+      "winget_id": "Microsoft.WindowsAppRuntime.1.6",
+      "weight": 2,
+      "size_mb": 55,
+      "profiles": [
+        "basic",
+        "developer"
+      ]
+    },
+    {
+      "id": "vulkan_runtime",
+      "name": "Vulkan Runtime",
+      "desc": "Yeni nesil 3D oyunlar, emülatörler ve GPU hesaplama motorları için Vulkan kütüphanesi.",
+      "category": "system",
+      "winget_id": "KhronosGroup.VulkanRT",
+      "weight": 1,
+      "size_mb": 14,
+      "profiles": [
+        "engineering",
+        "gaming"
+      ]
+    },
+    {
+      "id": "access_database_engine",
+      "name": "Microsoft Access Database Engine 2016",
+      "desc": "Excel, Access ve ERP veri aktarımları için 64-bit OLEDB/ODBC veritabanı sürücüsü.",
+      "category": "system",
+      "winget_id": "Microsoft.AccessDatabaseEngine.2016",
+      "weight": 2,
+      "size_mb": 79,
+      "profiles": [
+        "office",
+        "developer"
+      ]
+    },
+    {
+      "id": "klite_mega_codec",
+      "name": "K-Lite Mega Codec Pack",
+      "desc": "Video kurgu, oynatma ve oyun içi ara sahneler için eksiksiz DirectShow video/ses filtreleri.",
+      "category": "system",
+      "winget_id": "CodecGuide.K-LiteCodecPack.Mega",
+      "conflict_group": "codec_pack",
+      "weight": 2,
+      "size_mb": 62,
+      "profiles": [
+        "design_video",
+        "gaming"
+      ]
+    },
+    {
+      "id": "aspnetcore_runtime_10",
+      "name": "ASP.NET Core Runtime 10.0",
+      "desc": "Modern web API, mikroservisler ve yerel Kestrel sunucuları için LTS ASP.NET Core çalışma ortamı.",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.AspNetCore.10",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": [
+        "developer"
+      ]
+    },
+    {
+      "id": "aspnetcore_runtime_9",
+      "name": "ASP.NET Core Runtime 9.0 [EOL - Desteği Bitti]",
+      "desc": "Web API, mikroservisler ve yerel IIS barındırma için ASP.NET Core çalışma ortamı. (Resmi desteği bitmiş eski sürümdür).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.AspNetCore.9",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "aspnetcore_runtime_8",
+      "name": "ASP.NET Core Runtime 8.0 [EOL - Desteği Bitti]",
+      "desc": "Kurumsal web servisleri ve yerel Kestrel sunucuları için ASP.NET Core ortamı. (Resmi desteği bitmiş eski sürümdür).",
+      "category": "system",
+      "winget_id": "Microsoft.DotNet.AspNetCore.8",
+      "weight": 2,
+      "size_mb": 34,
+      "profiles": []
+    },
+    {
+      "id": "openssl_light",
+      "name": "OpenSSL Light for Windows",
+      "desc": "SSL/TLS sertifika yönetimi, yerel HTTPS geliştirme ve şifreleme araç takımı.",
+      "category": "system",
+      "winget_id": "ShiningLight.OpenSSL.Light",
+      "weight": 1,
+      "size_mb": 5,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "apple_bonjour",
+      "name": "Apple Bonjour Print Services",
+      "desc": "Ağdaki AirPrint yazıcıları ve mDNS aygıtlarını sıfır yapılandırmayla keşfetme servisi.",
+      "category": "system",
+      "winget_id": "Apple.BonjourPrintServices",
+      "weight": 1,
+      "size_mb": 6,
+      "profiles": [
+        "it_admin"
+      ]
+    },
+    {
+      "id": "cpuid_cpu_z",
+      "name": "CPUID CPU-Z",
+      "desc": "İşlemci, anakart, RAM gecikmeleri ve donanım doğrulama teşhis aracı.",
+      "category": "system",
+      "winget_id": "CPUID.CPU-Z",
+      "weight": 1,
+      "size_mb": 4,
+      "profiles": [
+        "gaming",
+        "it_admin"
+      ]
+    },
+    {
+      "id": "techpowerup_gpu_z",
+      "name": "TechPowerUp GPU-Z",
+      "desc": "Ekran kartı, VRAM hızı, PCIe hatları ve GPU sensör izleme aracı.",
+      "category": "system",
+      "winget_id": "TechPowerUp.GPU-Z",
+      "weight": 1,
+      "size_mb": 11,
+      "profiles": [
+        "gaming",
+        "it_admin"
+      ]
+    },
+    {
+      "id": "hwinfo64",
+      "name": "HWiNFO64",
+      "desc": "Detaylı donanım sensör analizi, sıcaklık ve voltaj izleme yazılımı.",
+      "category": "system",
+      "winget_id": "REALiX.HWiNFO",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": [
+        "engineering",
+        "gaming",
+        "it_admin"
+      ]
+    },
+    {
+      "id": "crystaldiskinfo",
+      "name": "CrystalDiskInfo",
+      "desc": "SSD ve HDD disk sağlığı, sıcaklık ve S.M.A.R.T. teşhis aracı.",
+      "category": "system",
+      "winget_id": "CrystalDewWorld.CrystalDiskInfo",
+      "weight": 1,
+      "size_mb": 6,
+      "profiles": [
+        "basic",
+        "it_admin"
+      ]
+    },
+    {
+      "id": "chrome",
+      "name": "Google Chrome",
+      "desc": "Google tarafından geliştirilen hızlı ve yaygın web tarayıcısı.",
+      "category": "browser",
+      "winget_id": "Google.Chrome.EXE",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "basic",
+        "office",
+        "academic"
+      ]
+    },
+    {
+      "id": "brave",
+      "name": "Brave Browser",
+      "desc": "Dahili reklam ve izleyici korumalı Chromium tabanlı tarayıcı.",
+      "category": "browser",
+      "winget_id": "Brave.Brave",
+      "weight": 2,
+      "size_mb": 105,
+      "profiles": [
+        "developer"
+      ],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+          "%ProgramFiles(x86)%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+          "%LocalAppData%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+        ],
+        "registry_names": [
+          "Brave",
+          "Brave Browser"
+        ]
+      }
+    },
+    {
+      "id": "firefox",
+      "name": "Mozilla Firefox",
+      "desc": "Gizlilik odaklı ve açık kaynak kodlu web tarayıcısı.",
+      "category": "browser",
+      "winget_id": "Mozilla.Firefox",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\Mozilla Firefox\\firefox.exe",
+          "%ProgramFiles(x86)%\\Mozilla Firefox\\firefox.exe"
+        ],
+        "registry_names": [
+          "Mozilla Firefox",
+          "Firefox"
+        ]
+      }
+    },
+    {
+      "id": "opera_gx",
+      "name": "Opera GX",
+      "desc": "Donanım sınırlayıcılarına sahip oyuncu odaklı web tarayıcısı.",
+      "category": "browser",
+      "winget_id": "Opera.OperaGX",
+      "weight": 2,
+      "size_mb": 100,
+      "profiles": [
+        "gaming"
+      ],
+      "verify": {
+        "files": [
+          "%LocalAppData%\\Programs\\Opera GX\\opera.exe"
+        ],
+        "registry_names": [
+          "Opera GX"
+        ]
+      }
+    },
+    {
+      "id": "opera",
+      "name": "Opera",
+      "desc": "Dahili VPN ve kenar çubuğu özellikli web tarayıcısı.",
+      "category": "browser",
+      "winget_id": "Opera.Opera",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%LocalAppData%\\Programs\\Opera\\opera.exe",
+          "%ProgramFiles%\\Opera\\opera.exe"
+        ],
+        "registry_names": [
+          "Opera"
+        ]
+      }
+    },
+    {
+      "id": "vivaldi",
+      "name": "Vivaldi",
+      "desc": "Gelişmiş sekme yönetimi ve özelleştirme sunan tarayıcı.",
+      "category": "browser",
+      "winget_id": "Vivaldi.Vivaldi",
+      "weight": 2,
+      "size_mb": 100,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%LocalAppData%\\Vivaldi\\Application\\vivaldi.exe",
+          "%ProgramFiles%\\Vivaldi\\Application\\vivaldi.exe"
+        ],
+        "registry_names": [
+          "Vivaldi"
+        ]
+      }
+    },
+    {
+      "id": "tor_browser",
+      "name": "Tor Browser",
+      "desc": "Anonimlik ve gizli internet erişimi sağlayan soğan ağı tarayıcısı.",
+      "category": "browser",
+      "winget_id": "TorProject.TorBrowser",
+      "weight": 2,
+      "size_mb": 90,
+      "profiles": []
+    },
+    {
+      "id": "7zip",
+      "name": "7-Zip",
+      "desc": "Yüksek sıkıştırma oranına sahip hafif arşivleme yazılımı.",
+      "category": "basic",
+      "winget_id": "7zip.7zip",
+      "conflict_group": "archiver",
+      "weight": 1,
+      "size_mb": 2,
+      "profiles": [
+        "basic",
+        "engineering",
+        "design_video",
+        "gaming",
+        "it_admin",
+        "office",
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "nanazip",
+      "name": "NanaZip",
+      "desc": "Windows 11 modern sağ tık menüsüne uyumlu 7-Zip çatalı.",
+      "category": "basic",
+      "winget_id": "M2Team.NanaZip",
+      "conflict_group": "archiver",
+      "weight": 1,
+      "size_mb": 4,
+      "profiles": []
+    },
+    {
+      "id": "everything",
+      "name": "Everything (Voidtools)",
+      "desc": "Diskteki dosyaları anında bulan ultra hızlı dosya arama motoru.",
+      "category": "basic",
+      "winget_id": "voidtools.Everything",
+      "weight": 1,
+      "size_mb": 3,
+      "profiles": [
+        "basic",
+        "it_admin",
+        "office",
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "notepadplusplus",
+      "name": "Notepad++",
+      "desc": "Sözdizimi vurgulamalı hafif metin ve kod düzenleyici.",
+      "category": "basic",
+      "winget_id": "Notepad++.Notepad++",
+      "weight": 1,
+      "size_mb": 5,
+      "profiles": [
+        "it_admin",
+        "academic",
+        "developer"
+      ]
+    },
+    {
+      "id": "peazip",
+      "name": "PeaZip",
+      "desc": "240'tan fazla formatı destekleyen gelişmiş açık kaynaklı arşiv ve şifreli kasa yöneticisi.",
+      "category": "basic",
+      "winget_id": "Giorgiotani.Peazip",
+      "conflict_group": "archiver",
+      "weight": 1,
+      "size_mb": 10,
+      "profiles": []
+    },
+    {
+      "id": "bandizip",
+      "name": "Bandizip",
+      "desc": "Çok çekirdekli işlemcilerle ultra hızlı sıkıştırma ve çıkarma yapan arşiv yazılımı.",
+      "category": "basic",
+      "winget_id": "Bandisoft.Bandizip",
+      "conflict_group": "archiver",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": []
+    },
+    {
+      "id": "powertoys",
+      "name": "Microsoft PowerToys",
+      "desc": "Pencere ızgaralama, hızlı arama, OCR metin seçici ve resmi Windows üretkenlik araçları.",
+      "category": "basic",
+      "winget_id": "Microsoft.PowerToys",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": []
+    },
+    {
+      "id": "files_app",
+      "name": "Files App",
+      "desc": "Sekmeli çalışma, çift panel ve etiketleme sistemine sahip modern açık kaynak dosya yöneticisi.",
+      "category": "basic",
+      "winget_id": "FilesCommunity.Files",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": []
+    },
+    {
+      "id": "ditto",
+      "name": "Ditto Pano Yöneticisi",
+      "desc": "Kopyalanan tüm metin ve görselleri saklayan aranabilir açık kaynaklı çoklu pano yöneticisi.",
+      "category": "basic",
+      "winget_id": "Ditto.Ditto",
+      "weight": 1,
+      "size_mb": 8,
+      "profiles": []
+    },
+    {
+      "id": "wiztree",
+      "name": "WizTree",
+      "desc": "Sabit diski saniyeler içinde tarayarak büyük dosyaları görselleştiren en hızlı disk analiz aracı.",
+      "category": "basic",
+      "winget_id": "AntibodySoftware.WizTree",
+      "weight": 1,
+      "size_mb": 6,
+      "profiles": []
+    },
+    {
+      "id": "windirstat",
+      "name": "WinDirStat",
+      "desc": "Disk kullanımını ve klasör boyutlarını renkli ağaç haritasıyla gösteren açık kaynaklı analiz aracı.",
+      "category": "basic",
+      "winget_id": "WinDirStat.WinDirStat",
+      "weight": 1,
+      "size_mb": 3,
+      "profiles": []
+    },
+    {
+      "id": "revo_uninstaller",
+      "name": "Revo Uninstaller",
+      "desc": "İstenmeyen programları kalan kayıt defteri anahtarları ve çöp dosyalarıyla temizleyen kaldırıcı.",
+      "category": "basic",
+      "winget_id": "RevoUninstaller.RevoUninstaller",
+      "weight": 2,
+      "size_mb": 18,
+      "profiles": []
+    },
+    {
+      "id": "bleachbit",
+      "name": "BleachBit",
+      "desc": "Önbellek, geçici dosyalar ve tarayıcı çöplerini güvenle temizleyen açık kaynaklı temizlik yazılımı.",
+      "category": "basic",
+      "winget_id": "BleachBit.BleachBit",
+      "weight": 1,
+      "size_mb": 14,
+      "profiles": []
+    },
+    {
+      "id": "faststone_viewer",
+      "name": "FastStone Image Viewer",
+      "desc": "Ultra hızlı, tam ekran gezintili ve toplu dönüştürme özellikli hafif görsel görüntüleyici.",
+      "category": "basic",
+      "winget_id": "FastStone.Viewer",
+      "weight": 1,
+      "size_mb": 8,
+      "profiles": []
+    },
+    {
+      "id": "imageglass",
+      "name": "ImageGlass",
+      "desc": "Tüm modern ve RAW görsel formatlarını destekleyen şık ve açık kaynaklı resim görüntüleyici.",
+      "category": "basic",
+      "winget_id": "DuongDieuPhap.ImageGlass",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": []
+    },
+    {
+      "id": "flameshot",
+      "name": "Flameshot",
+      "desc": "Anlık ok, metin, vurgulama ve buzlama araçlarına sahip açık kaynaklı ekran yakalama aracı.",
+      "category": "basic",
+      "winget_id": "Flameshot.Flameshot",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": []
+    },
+    {
+      "id": "autohotkey",
+      "name": "AutoHotkey",
+      "desc": "Özel klavye kısayolları, makrolar ve metin genişletme için açık kaynaklı otomasyon motoru.",
+      "category": "basic",
+      "winget_id": "AutoHotkey.AutoHotkey",
+      "weight": 1,
+      "size_mb": 5,
+      "profiles": []
+    },
+    {
+      "id": "syncthing",
+      "name": "Syncthing",
+      "desc": "Cihazlar arasında bulutsuz, şifreli ve eşler arası (P2P) açık kaynaklı dosya senkronizasyonu.",
+      "category": "basic",
+      "winget_id": "Syncthing.Syncthing",
+      "weight": 2,
+      "size_mb": 25,
+      "profiles": []
+    },
+    {
+      "id": "onlyoffice",
+      "name": "ONLYOFFICE Desktop Editors",
+      "desc": "Microsoft Office belgeleriyle yüksek uyumluluğa sahip ofis paketi.",
+      "category": "office",
+      "winget_id": "ONLYOFFICE.DesktopEditors",
+      "conflict_group": "office_suite",
+      "weight": 3,
+      "size_mb": 320,
+      "profiles": [
+        "office",
+        "academic"
+      ]
+    },
+    {
+      "id": "libreoffice",
+      "name": "LibreOffice",
+      "desc": "Açık kaynak kodlu ve ücretsiz ofis yazılım paketi.",
+      "category": "office",
+      "winget_id": "TheDocumentFoundation.LibreOffice",
+      "conflict_group": "office_suite",
+      "weight": 3,
+      "size_mb": 350,
+      "profiles": []
+    },
+    {
+      "id": "pdf24",
+      "name": "PDF24 Creator",
+      "desc": "PDF birleştirme, bölme ve dönüştürme araçları paketi.",
+      "category": "office",
+      "winget_id": "geeksoftwareGmbH.PDF24Creator",
+      "weight": 2,
+      "size_mb": 38,
+      "profiles": [
+        "basic",
+        "engineering",
+        "office",
+        "academic"
+      ]
+    },
+    {
+      "id": "sumatrapdf",
+      "name": "SumatraPDF",
+      "desc": "Hızlı ve düşük sistem kaynaklı PDF ve e-kitap okuyucu.",
+      "category": "office",
+      "winget_id": "SumatraPDF.SumatraPDF",
+      "conflict_group": "pdf_reader",
+      "weight": 1,
+      "size_mb": 11,
+      "profiles": []
+    },
+    {
+      "id": "wps_office",
+      "name": "WPS Office",
+      "desc": "Sekmeli çalışma düzenine sahip popüler hepsi-bir-arada ofis paketi.",
+      "category": "office",
+      "winget_id": "Kingsoft.WPSOffice",
+      "conflict_group": "office_suite",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": []
+    },
+    {
+      "id": "adobe_reader",
+      "name": "Adobe Acrobat Reader",
+      "desc": "Resmi e-İmzalı ve kurumsal form destekli güvenilir PDF görüntüleyici.",
+      "category": "office",
+      "winget_id": "Adobe.Acrobat.Reader.64-bit",
+      "conflict_group": "pdf_reader",
+      "weight": 3,
+      "size_mb": 350,
+      "profiles": [
+        "office"
+      ]
+    },
+    {
+      "id": "pdfgear",
+      "name": "PDFgear",
+      "desc": "Metin düzenleme, dönüştürme ve OCR özellikli ücretsiz tam teşekküllü PDF düzenleyici.",
+      "category": "office",
+      "winget_id": "PDFgear.PDFgear",
+      "conflict_group": "pdf_reader",
+      "weight": 2,
+      "size_mb": 120,
+      "profiles": []
+    },
+    {
+      "id": "foxit_reader",
+      "name": "Foxit PDF Reader",
+      "desc": "Gelişmiş not alma ve form doldurma araçlarına sahip hafif PDF okuyucu.",
+      "category": "office",
+      "winget_id": "Foxit.FoxitReader",
+      "conflict_group": "pdf_reader",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": []
+    },
+    {
+      "id": "naps2",
+      "name": "NAPS2 Belge Tarayıcı",
+      "desc": "Tek tıkla tarama, yamukluk düzeltme ve Türkçe OCR destekli açık kaynak tarama aracı.",
+      "category": "office",
+      "winget_id": "Cyanfish.NAPS2",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "calibre",
+      "name": "Calibre E-Kitap Yöneticisi",
+      "desc": "Dijital döküman ve e-kitap kütüphane yöneticisi ve format dönüştürücü.",
+      "category": "office",
+      "winget_id": "calibre.calibre",
+      "weight": 2,
+      "size_mb": 140,
+      "profiles": [
+        "office"
+      ]
+    },
+    {
+      "id": "joplin",
+      "name": "Joplin",
+      "desc": "Uçtan uca şifreli (E2EE), Markdown destekli açık kaynak not defteri.",
+      "category": "office",
+      "winget_id": "Joplin.Joplin",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": []
+    },
+    {
+      "id": "logseq",
+      "name": "Logseq",
+      "desc": "Yerel dosya ve gizlilik odaklı bağlantılı bilgi ağı ve not alma uygulaması.",
+      "category": "office",
+      "winget_id": "Logseq.Logseq",
+      "weight": 2,
+      "size_mb": 110,
+      "profiles": []
+    },
+    {
+      "id": "xmind",
+      "name": "Xmind",
+      "desc": "Beyin fırtınası, proje planlama ve görsel zihin haritası (mind map) yazılımı.",
+      "category": "office",
+      "winget_id": "Xmind.Xmind",
+      "weight": 2,
+      "size_mb": 135,
+      "profiles": []
+    },
+    {
+      "id": "vlc",
+      "name": "VLC Media Player",
+      "desc": "Tüm ses ve video formatlarını destekleyen açık kaynak medya oynatıcı.",
+      "category": "media",
+      "winget_id": "VideoLAN.VLC",
+      "weight": 2,
+      "size_mb": 42,
+      "profiles": [
+        "basic",
+        "gaming"
+      ]
+    },
+    {
+      "id": "klite_codec",
+      "name": "K-Lite Codec Pack Standard (MPC-HC)",
+      "desc": "Geniş format kodek paketi ve Media Player Classic oynatıcı.",
+      "category": "media",
+      "winget_id": "CodecGuide.K-LiteCodecPack.Standard",
+      "conflict_group": "codec_pack",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": []
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify Desktop",
+      "desc": "Çevrimiçi müzik ve podcast dinleme masaüstü uygulaması.",
+      "category": "media",
+      "winget_id": "Spotify.Spotify",
+      "weight": 2,
+      "size_mb": 90,
+      "profiles": [
+        "gaming"
+      ]
+    },
+    {
+      "id": "sharex",
+      "name": "ShareX",
+      "desc": "Ekran görüntüsü alma, kayıt ve paylaşım aracı.",
+      "category": "media",
+      "winget_id": "ShareX.ShareX",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "obs_studio",
+      "name": "OBS Studio",
+      "desc": "Ekran kaydı ve canlı yayın yazılımı.",
+      "category": "media",
+      "winget_id": "OBSProject.OBSStudio",
+      "weight": 2,
+      "size_mb": 130,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "handbrake",
+      "name": "HandBrake",
+      "desc": "Video dosyalarını dönüştürme ve boyut sıkıştırma yazılımı.",
+      "category": "media",
+      "winget_id": "HandBrake.HandBrake",
+      "weight": 2,
+      "size_mb": 25,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "audacity",
+      "name": "Audacity",
+      "desc": "Çok kanallı ses kayıt ve düzenleme yazılımı.",
+      "category": "media",
+      "winget_id": "Audacity.Audacity",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": [
+        "design_video"
+      ]
+    },
+    {
+      "id": "gomplayer",
+      "name": "GOM Player",
+      "desc": "Dahili kodekler, otomatik altyazı bulucu ve 360 derece VR oynatma özellikli video oynatıcı.",
+      "category": "media",
+      "winget_id": "GOMLab.GOMPlayer",
+      "weight": 2,
+      "size_mb": 32,
+      "profiles": []
+    },
+    {
+      "id": "potplayer",
+      "name": "Daum PotPlayer",
+      "desc": "Donanım hızlandırması yüksek, 4K/HDR destekli ve profesyonel video oynatıcı.",
+      "category": "media",
+      "winget_id": "Daum.PotPlayer",
+      "weight": 2,
+      "size_mb": 38,
+      "profiles": []
+    },
+    {
+      "id": "mpv_net",
+      "name": "mpv.net Media Player",
+      "desc": "Modern Windows arayüzlü, minimalist, hafif ve yüksek performanslı açık kaynaklı video oynatıcı.",
+      "category": "media",
+      "winget_id": "mpv.net",
+      "weight": 2,
+      "size_mb": 28,
+      "profiles": []
+    },
+    {
+      "id": "mpc_be",
+      "name": "MPC-BE",
+      "desc": "Media Player Classic'in modernleştirilmiş, koyu temalı açık kaynaklı sürümü.",
+      "category": "media",
+      "winget_id": "MPC-BE.MPC-BE",
+      "weight": 2,
+      "size_mb": 22,
+      "profiles": []
+    },
+    {
+      "id": "aimp",
+      "name": "AIMP Ses Oynatıcı",
+      "desc": "32-bit kristal ses motoru, 18 bant ekolayzır ve internet radyosu destekli müzik çalar.",
+      "category": "media",
+      "winget_id": "AIMP.AIMP",
+      "weight": 2,
+      "size_mb": 18,
+      "profiles": []
+    },
+    {
+      "id": "foobar2000",
+      "name": "foobar2000 Müzik Çalar",
+      "desc": "Odyofiller için endüstri standardı modüler, kayıpsız ses (FLAC/DSD) destekli müzik çalar.",
+      "category": "media",
+      "winget_id": "PeterPawlowski.foobar2000",
+      "weight": 1,
+      "size_mb": 7,
+      "profiles": []
+    },
+    {
+      "id": "musicbee",
+      "name": "MusicBee Müzik Yöneticisi",
+      "desc": "Geniş müzik arşivlerini etiketleme, organize etme ve cihazlarla senkronize etme yöneticisi.",
+      "category": "media",
+      "winget_id": "9P4CLT2RJ1RS",
+      "source": "msstore",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": []
+    },
+    {
+      "id": "stremio",
+      "name": "Stremio Medya Merkezi",
+      "desc": "Dizi, film, YouTube ve podcast içeriklerini tek merkezde toplayan modern akış platformu.",
+      "category": "media",
+      "winget_id": "Stremio.Stremio",
+      "weight": 2,
+      "size_mb": 110,
+      "profiles": []
+    },
+    {
+      "id": "fxsound",
+      "name": "FxSound Ses Yükseltici",
+      "desc": "Windows sistem sesini, baslarını ve berraklığını artıran ücretsiz açık kaynaklı ses geliştirici.",
+      "category": "media",
+      "winget_id": "FxSound.FxSound",
+      "weight": 1,
+      "size_mb": 12,
+      "profiles": []
+    },
+    {
+      "id": "lossless_cut",
+      "name": "LosslessCut Medya Kırpıcı",
+      "desc": "Video ve ses dosyalarını yeniden kodlamadan anında ve kayıpsız kesip birleştirme aracı.",
+      "category": "media",
+      "winget_id": "ch.LosslessCut",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": []
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "desc": "Sesli, görüntülü ve yazılı topluluk iletişim platformu.",
+      "category": "comm",
+      "winget_id": "Discord.Discord",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": [
+        "gaming",
+        "developer"
+      ]
+    },
+    {
+      "id": "telegram",
+      "name": "Telegram Desktop",
+      "desc": "Hızlı ve bulut tabanlı mesajlaşma uygulaması.",
+      "category": "comm",
+      "winget_id": "Telegram.TelegramDesktop",
+      "weight": 2,
+      "size_mb": 45,
+      "profiles": []
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp Desktop",
+      "desc": "WhatsApp masaüstü bağımsız istemcisi.",
+      "category": "comm",
+      "winget_id": "9NKSQGP7F2NH",
+      "source": "msstore",
+      "weight": 2,
+      "size_mb": 95,
+      "profiles": [
+        "office"
+      ],
+      "verify": {
+        "appx_names": [
+          "5319275A.WhatsAppDesktop",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "zoom",
+      "name": "Zoom Workplace",
+      "desc": "Video konferans ve uzaktan toplantı uygulaması.",
+      "category": "comm",
+      "winget_id": "Zoom.Zoom",
+      "weight": 2,
+      "size_mb": 65,
+      "profiles": [
+        "office",
+        "academic"
+      ]
+    },
+    {
+      "id": "slack",
+      "name": "Slack",
+      "desc": "Takım çalışması ve kurumsal mesajlaşma platformu.",
+      "category": "comm",
+      "winget_id": "SlackTechnologies.Slack",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": []
+    },
+    {
+      "id": "steam",
+      "name": "Steam",
+      "desc": "Valve dijital oyun dağıtım ve topluluk platformu.",
+      "category": "gaming",
+      "winget_id": "Valve.Steam",
+      "weight": 1,
+      "size_mb": 2,
+      "profiles": [
+        "gaming"
+      ]
+    },
+    {
+      "id": "epic_games",
+      "name": "Epic Games Launcher",
+      "desc": "Epic Games oyun dağıtım ve başlatıcı uygulaması.",
+      "category": "gaming",
+      "winget_id": "EpicGames.EpicGamesLauncher",
+      "weight": 2,
+      "size_mb": 60,
+      "profiles": [
+        "gaming"
+      ]
+    },
+    {
+      "id": "gog_galaxy",
+      "name": "GOG GALAXY",
+      "desc": "Oyun kütüphanelerini tek merkezde toplayan istemci.",
+      "category": "gaming",
+      "winget_id": "GOG.Galaxy",
+      "weight": 3,
+      "size_mb": 240,
+      "profiles": []
+    },
+    {
+      "id": "ea_app",
+      "name": "EA App",
+      "desc": "Electronic Arts oyun platformu istemcisi.",
+      "category": "gaming",
+      "winget_id": "ElectronicArts.EADesktop",
+      "weight": 2,
+      "size_mb": 75,
+      "profiles": []
+    },
+    {
+      "id": "qbittorrent",
+      "name": "qBittorrent",
+      "desc": "Açık kaynak ve reklamsız dosya paylaşım istemcisi.",
+      "category": "network",
+      "winget_id": "qBittorrent.qBittorrent",
+      "weight": 2,
+      "size_mb": 35,
+      "profiles": [
+        "gaming"
+      ]
+    },
+    {
+      "id": "fdm",
+      "name": "Free Download Manager",
+      "desc": "Çok parçalı indirme yöneticisi.",
+      "category": "network",
+      "winget_id": "SoftDeluxe.FreeDownloadManager",
+      "weight": 2,
+      "size_mb": 40,
+      "profiles": []
+    },
+    {
+      "id": "rustdesk",
+      "name": "RustDesk",
+      "pinned_version": "1.5.1",
+      "desc": "Açık kaynak ve güvenli uzaktan masaüstü kontrol yazılımı.",
+      "category": "network",
+      "winget_id": "direct.rustdesk",
+      "install_type": "direct_exe",
+      "download_url": "https://github.com/rustdesk/rustdesk/releases/download/1.5.1/rustdesk-1.5.1-x86_64.exe",
+      "sha256": "319206042390ebfcba934cf0baa2f612f34de463c78c843b7cb8c22097c4bf7b",
+      "publisher": "PURSLANE",
+      "silent_args": [
+        "--silent-install"
+      ],
+      "weight": 2,
+      "size_mb": 22,
+      "profiles": [],
+      "verify": {
+        "files": [
+          "%ProgramFiles%\\RustDesk\\rustdesk.exe"
+        ],
+        "registry_names": [
+          "RustDesk"
+        ]
+      }
+    },
+    {
+      "id": "bitwarden",
+      "name": "Bitwarden",
+      "desc": "Açık kaynak şifreli parola yöneticisi.",
+      "category": "network",
+      "winget_id": "Bitwarden.Bitwarden",
+      "weight": 2,
+      "size_mb": 85,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "keepassxc",
+      "name": "KeePassXC",
+      "desc": "Yerel şifre kasası ve kimlik yönetim yazılımı.",
+      "category": "network",
+      "winget_id": "KeePassXCTeam.KeePassXC",
+      "weight": 2,
+      "size_mb": 25,
+      "profiles": []
+    },
+    {
+      "id": "wireshark",
+      "name": "Wireshark",
+      "desc": "Ağ protokolü analizi ve paket inceleme aracı.",
+      "category": "network",
+      "winget_id": "WiresharkFoundation.Wireshark",
+      "weight": 2,
+      "size_mb": 80,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    },
+    {
+      "id": "virtualbox",
+      "name": "Oracle VirtualBox",
+      "desc": "Sanal makine oluşturma ve çalıştırma platformu.",
+      "category": "network",
+      "winget_id": "Oracle.VirtualBox",
+      "weight": 2,
+      "size_mb": 115,
+      "profiles": [
+        "it_admin",
+        "developer"
+      ]
+    }
+  ]
+}

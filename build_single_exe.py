@@ -77,6 +77,7 @@ def build():
         "--noupx",          # Antivirüs yanlış alarmlarını önlemek için UPX sıkıştırmasını kapat
         "--name", "FormatSonrasiKurulum",
         "--collect-all", "customtkinter",
+        "--add-data", "data;data",
         "main.py",
     ]
 
