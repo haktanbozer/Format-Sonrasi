@@ -23,6 +23,9 @@ from typing import Callable, List, Dict, Any, Set, Tuple, Optional
 from verifier import verify_application_installed, invalidate_registry_cache, invalidate_all_verification_caches
 from session_manager import SessionManager
 from system_checks import is_admin, ensure_secure_dir, get_system32_path, get_winget_path
+from app_logger import get_logger
+
+logger = get_logger("installer_core")
 
 # WinGet / AppInstaller hata ve durum kodları
 # 0x8A15002B = 2316632107 (işaretsiz) / -1978335189 (işaretli):
@@ -106,12 +109,12 @@ class InstallationWorker(threading.Thread):
                     creationflags=creationflags,
                     timeout=5,
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f'taskkill çağrısı başarısız: {e}')
             try:
                 proc.kill()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f'proc.kill çağrısı başarısız: {e}')
             self.current_process = None
 
     def cancel(self):
@@ -133,12 +136,12 @@ class InstallationWorker(threading.Thread):
         SessionManager.create_session(self.app_list)
         invalidate_all_verification_caches()
 
-        self.on_log(f"[ISLEM] Kurulum sirasi baslatildi. Toplam {total} uygulama kurulacak.")
-        self.on_log("[BILGI] Uygulamalar dosya agirligina gore optimize edilerek siraya dizildi (Hafif -> Agir).\n")
+        self.on_log(f"[İŞLEM] Kurulum sırası başlatıldı. Toplam {total} uygulama kurulacak.")
+        self.on_log("[BİLGİ] Uygulamalar dosya ağırlığına göre optimize edilerek sıraya dizildi (Hafif -> Ağır).\n")
 
         for index, app in enumerate(self.app_list, start=1):
             if self.is_cancelled:
-                self.on_log("\n[UYARI] Kurulum kullanici tarafindan durduruldu.")
+                self.on_log("\n[UYARI] Kurulum kullanıcı tarafından durduruldu.")
                 break
 
             app_id = app["id"]
@@ -168,7 +171,7 @@ class InstallationWorker(threading.Thread):
                     task_ok = SessionManager.mark_reboot_required()
                     if not task_ok:
                         self.on_log(f"    [UYARI] Otomatik devam görevi zamanlanamadı. Sistemi yeniden başlattıktan sonra uygulamayı lütfen elle açın.")
-                    self.on_log(f"    [REBOOT] '{app_name}' sistem yeniden baslatmasi istiyor.")
+                    self.on_log(f"    [YENİDEN BAŞLATMA] '{app_name}' sistem yeniden başlatması istiyor.")
 
                 # Kurulum sonrası hafif kayıt defteri önbelleğini yenile ve gerçek doğrulama motorunu çalıştır
                 invalidate_registry_cache()
@@ -249,12 +252,12 @@ class InstallationWorker(threading.Thread):
     def _install_winget(self, index: int, total: int, app: Dict[str, Any], timeout_sec: int = 900) -> Tuple[bool, str, bool, bool]:
         app_name = app["name"]
         winget_id = app["winget_id"]
-        self.on_log(f"[{index}/{total}] [INDIRILIYOR] '{app_name}' winget ile indiriliyor ve kuruluyor ({winget_id})...")
+        self.on_log(f"[{index}/{total}] [İNDİRİLİYOR] '{app_name}' winget ile indiriliyor ve kuruluyor ({winget_id})...")
 
         source = app.get("source", "winget")
         # Yalnızca bilinen WinGet kaynak adlarına izin ver (komut listesi olsa da savunma derinliği)
         if source not in {"winget", "msstore"}:
-            self.on_log(f"[{index}/{total}] [GUVENLIK HATASI] Bilinmeyen kaynak reddedildi: {source!r}\n")
+            self.on_log(f"[{index}/{total}] [GÜVENLİK HATASI] Bilinmeyen kaynak reddedildi: {source!r}\n")
             return False, f"Güvenlik Engeli: Bilinmeyen winget kaynağı ({source!r})", False, False
         winget_bin = get_winget_path()
         cmd = [
@@ -332,19 +335,19 @@ class InstallationWorker(threading.Thread):
         elapsed = round(time.time() - start_time, 1)
         ret_u = ret_code & 0xFFFFFFFF
 
-        if ret_u in (0, 3010):
-            is_reboot = (ret_u == 3010)
-            self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' basariyla kuruldu ({elapsed} sn).\n")
+        if ret_u in (0, 1641, 3010):
+            is_reboot = (ret_u in (1641, 3010))
+            self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' başarıyla kuruldu ({elapsed} sn).\n")
             return True, f"Kuruldu ({elapsed} sn)", is_reboot, False
         elif ret_u == APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE:
             # WinGet APPINSTALLER_CLI_ERROR_UPDATE_NOT_APPLICABLE (0x8A15002B)
             # Paket sistemde zaten mevcut ve daha yeni bir sürümü yok
-            self.on_log(f"[{index}/{total}] [BILGI] '{app_name}' zaten sistemde guncel surumde mevcut.\n")
+            self.on_log(f"[{index}/{total}] [BİLGİ] '{app_name}' zaten sistemde güncel sürümde mevcut.\n")
             return True, "Zaten kurulu", False, True
         else:
-            self.on_log(f"[{index}/{total}] [HATA] '{app_name}' kurulumu tamamlanamadi (Kod: {ret_code}).")
+            self.on_log(f"[{index}/{total}] [HATA] '{app_name}' kurulumu tamamlanamadı (Kod: {ret_code}).")
             if stdout_lines:
-                self.on_log(f"    Son cikti: {stdout_lines[-1]}\n")
+                self.on_log(f"    Son çıktı: {stdout_lines[-1]}\n")
             return False, f"Hata Kodu: {ret_code}", False, False
 
     def _verify_authenticode(self, path: str, publisher: Optional[str] = None) -> Tuple[bool, str]:
@@ -395,21 +398,21 @@ class InstallationWorker(threading.Thread):
         download_url = app["download_url"]
         silent_args = app.get("silent_args", ["/quiet", "/norestart"])
         expected_sha256 = app.get("sha256")
-        max_size_mb = max(app.get("size_mb", 100) * 3, 2048)  # Güvenlik sınırı
+        max_size_mb = min(max(app.get("size_mb", 100) * 3, 50), 4096)  # Güvenlik sınırı (50 MB - 4096 MB)
         max_bytes = max_size_mb * 1024 * 1024
 
         # 1. URL Güvenlik Doğrulaması (Yalnızca HTTPS kabul edilir)
         if not download_url.startswith("https://"):
-            self.on_log(f"[{index}/{total}] [GUVENLIK HATASI] Güvenli olmayan URL reddedildi: {download_url}\n")
+            self.on_log(f"[{index}/{total}] [GÜVENLİK HATASI] Güvenli olmayan URL reddedildi: {download_url}\n")
             return False, "Güvenlik Engeli: Yalnızca HTTPS URL'leri desteklenir", False, False
 
         # Güvenlik ilkesi: İndirilecek doğrudan ikilinin ya bilinen SHA-256 özeti ya da resmi yayıncısı tanımlı olmalıdır
         expected_pub = app.get("publisher")
         if not expected_sha256 and not expected_pub:
-            self.on_log(f"[{index}/{total}] [GUVENLIK ENGELI] '{app_name}' için ne SHA-256 ne de yayıncı sertifikası tanımlı!\n")
+            self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] '{app_name}' için ne SHA-256 ne de yayıncı sertifikası tanımlı!\n")
             return False, "Güvenlik Engeli: Ne SHA-256 ne de yayıncı sertifikası tanımlanmış", False, False
 
-        self.on_log(f"[{index}/{total}] [INDIRILIYOR] '{app_name}' resmi sunucudan güvenle indiriliyor...")
+        self.on_log(f"[{index}/{total}] [İNDİRİLİYOR] '{app_name}' resmi sunucudan güvenle indiriliyor...")
         start_time = time.time()
 
         temp_fd = None
@@ -445,14 +448,14 @@ class InstallationWorker(threading.Thread):
             calculated_hash = hasher.hexdigest().lower()
             if expected_sha256:
                 if calculated_hash != expected_sha256.lower():
-                    self.on_log(f"[{index}/{total}] [GUVENLIK ENGELI] SHA-256 bütünlük doğrulaması başarısız!\n")
+                    self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] SHA-256 bütünlük doğrulaması başarısız!\n")
                     return False, "Hash Uyuşmazlığı (Dosya değiştirilmiş olabilir)", False, False
                 self.on_log(f"    > SHA-256 bütünlük doğrulaması başarılı.")
 
             if not expected_sha256 or expected_pub:
                 ok, sig_info = self._verify_authenticode(temp_exe, publisher=expected_pub)
                 if not ok:
-                    self.on_log(f"[{index}/{total}] [GUVENLIK ENGELI] Dijital imza doğrulaması başarısız ({sig_info})!\n")
+                    self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] Dijital imza doğrulaması başarısız ({sig_info})!\n")
                     return False, f"Güvenlik Engeli: Geçersiz Dijital İmza ({sig_info})", False, False
                 self.on_log(f"    > Authenticode dijital imzası geçerli ({sig_info}).")
 
@@ -463,7 +466,7 @@ class InstallationWorker(threading.Thread):
                     while chunk := f_chk.read(65536):
                         h_final.update(chunk)
                 if h_final.hexdigest().lower() != expected_sha256.lower():
-                    self.on_log(f"[{index}/{total}] [GUVENLIK ENGELI] Çalıştırma öncesi hash uyuşmazlığı!\n")
+                    self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] Çalıştırma öncesi hash uyuşmazlığı!\n")
                     return False, "Güvenlik Engeli: Çalıştırma öncesi dosya bütünlüğü bozulmuş", False, False
 
             self.on_log(f"[{index}/{total}] [KURULUYOR] '{app_name}' sessiz kurulum çalıştırılıyor...")
@@ -481,8 +484,8 @@ class InstallationWorker(threading.Thread):
                 self.current_process = None
 
             elapsed = round(time.time() - start_time, 1)
-            if ret_code in [0, 3010]:
-                is_reboot = (ret_code == 3010)
+            if ret_code in [0, 1641, 3010]:
+                is_reboot = (ret_code in [1641, 3010])
                 self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' başarıyla kuruldu ({elapsed} sn).\n")
                 return True, f"Kuruldu ({elapsed} sn)", is_reboot, False
             else:
@@ -493,17 +496,17 @@ class InstallationWorker(threading.Thread):
             if temp_fd is not None:
                 try:
                     os.close(temp_fd)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f'temp_fd kapatılamadı: {e}')
             if temp_exe and os.path.exists(temp_exe):
                 try:
                     os.remove(temp_exe)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f'temp_exe silinemedi: {e}')
 
     def _install_filezilla_clean(self, index: int, total: int, app: Dict[str, Any]) -> Tuple[bool, str, bool, bool]:
         app_name = app["name"]
-        self.on_log(f"[{index}/{total}] [INDIRILIYOR] '{app_name}' reklamsiz paket indiriliyor...")
+        self.on_log(f"[{index}/{total}] [İNDİRİLİYOR] '{app_name}' reklamsız paket indiriliyor...")
         start_time = time.time()
 
         max_pkg_size = 60 * 1024 * 1024  # En fazla 60 MB paket boyutu
@@ -548,7 +551,7 @@ class InstallationWorker(threading.Thread):
             target_pub = app.get("publisher", "Tim Kosse")
             ok, sig_info = self._verify_authenticode(temp_exe, publisher=target_pub)
             if not ok:
-                self.on_log(f"[{index}/{total}] [GUVENLIK ENGELI] FileZilla dijital imza doğrulaması başarısız ({sig_info})!\n")
+                self.on_log(f"[{index}/{total}] [GÜVENLİK ENGELİ] FileZilla dijital imza doğrulaması başarısız ({sig_info})!\n")
                 return False, f"Güvenlik Engeli: Geçersiz FileZilla İmzası ({sig_info})", False, False
             self.on_log(f"    > FileZilla resmi dijital imzası doğrulandı ({sig_info}).")
 
@@ -567,9 +570,9 @@ class InstallationWorker(threading.Thread):
                 self.current_process = None
 
             elapsed = round(time.time() - start_time, 1)
-            if ret_code in [0, 3010]:
-                is_reboot = (ret_code == 3010)
-                self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' basariyla kuruldu ({elapsed} sn).\n")
+            if ret_code in [0, 1641, 3010]:
+                is_reboot = (ret_code in [1641, 3010])
+                self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' başarıyla kuruldu ({elapsed} sn).\n")
                 return True, f"Kuruldu ({elapsed} sn)", is_reboot, False
             else:
                 self.on_log(f"[{index}/{total}] [HATA] '{app_name}' kurulum kodu: {ret_code}\n")
@@ -578,13 +581,13 @@ class InstallationWorker(threading.Thread):
             if temp_fd is not None:
                 try:
                     os.close(temp_fd)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f'temp_fd kapatılamadı: {e}')
             if temp_exe and os.path.exists(temp_exe):
                 try:
                     os.remove(temp_exe)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f'temp_exe silinemedi: {e}')
 
     def _install_dism_feature(self, index: int, total: int, app_name: str, feature_name: str) -> Tuple[bool, str, bool, bool]:
         # Girdi Temizliği (Komut enjeksiyonu önleme)
@@ -653,10 +656,10 @@ class InstallationWorker(threading.Thread):
 
         elapsed = round(time.time() - start_time, 1)
 
-        if ret_code in [0, 3010]:
-            is_reboot = (ret_code == 3010)
-            self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' basariyla etkinlestirildi ({elapsed} sn).\n")
-            return True, f"Etkinlestirildi ({elapsed} sn)", is_reboot, False
+        if ret_code in [0, 1641, 3010]:
+            is_reboot = (ret_code in [1641, 3010])
+            self.on_log(f"[{index}/{total}] [TAMAMLANDI] '{app_name}' başarıyla etkinleştirildi ({elapsed} sn).\n")
+            return True, f"Etkinleştirildi ({elapsed} sn)", is_reboot, False
         else:
-            self.on_log(f"[{index}/{total}] [HATA] DISM hatasi: Kod {ret_code}\n")
+            self.on_log(f"[{index}/{total}] [HATA] DISM hatası: Kod {ret_code}\n")
             return False, f"DISM Kodu: {ret_code}", False, False
