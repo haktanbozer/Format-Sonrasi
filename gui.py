@@ -25,6 +25,10 @@ from verifier import verify_application_installed, get_all_installed_display_nam
 from hardware_info import get_system_hardware_info
 from manufacturer_support import resolve_support_info
 from version import VERSION_DISPLAY
+from ui.app_row import AppItemRow
+from app_logger import get_logger
+
+logger = get_logger('gui')
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -246,8 +250,8 @@ class MainWindow(ctk.CTk):
                 sys.stderr.write(f"[UYARI] UI kuyruk görevi hatası: {e}\n")
         try:
             self.after(30, self._poll_ui_queue)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"_poll_ui_queue sonlandırıldı: {e}")
 
     def _build_top_bar(self):
         top = ctk.CTkFrame(self, height=60, corner_radius=0, fg_color=("gray88", "#16191d"))
@@ -985,8 +989,8 @@ class MainWindow(ctk.CTk):
             try:
                 self.clipboard_clear()
                 self.clipboard_append(res["clipboard_text"])
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Panoya kopyalanamadı: {e}")
 
         status_msg = res.get("status_message", "")
         if hasattr(self, "hw_status_lbl"):
@@ -1186,8 +1190,8 @@ class MainWindow(ctk.CTk):
         # Liste yenilendiğinde kaydırma çubuğunu en üste sıfırla (Boş ekran kalmasını önler)
         try:
             self.apps_scroll._parent_canvas.yview_moveto(0.0)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"apps_scroll yview_moveto hatası: {e}")
 
     # ------------------ SEÇİM VE PROFİL YÖNETİMİ ------------------
 
@@ -1426,13 +1430,13 @@ class MainWindow(ctk.CTk):
                 try:
                     self.console_text.insert("end", "\n".join(lines) + "\n")
                     self.console_text.see("end")
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"console_text see hatası: {e}")
 
         try:
             self.after(100, self._poll_logs)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"_poll_logs sonlandırıldı: {e}")
 
     def _check_resume_session(self):
         # Eğer sistem otomatik resume görevi ile açılmışsa görevin kalıcı kalmaması için derhal sil
@@ -1775,6 +1779,21 @@ class MainWindow(ctk.CTk):
             applied = 0
             errors = []
             self.append_log(f"\n--- Windows İnce Ayarları Uygulanıyor [Kapsam: {scope_text}] ---")
+
+            # İnce ayarlar öncesinde sistem geri yükleme noktası oluşturulur
+            active_tweaks = [t_id for t_id, var in self.tweak_vars.items() if var.get()]
+            if active_tweaks:
+                self.append_log("  [BİLGİ] İnce ayarlar öncesinde sistem geri yükleme noktası oluşturuluyor...")
+                try:
+                    from tweaks import create_system_restore_point
+                    rp_ok, rp_msg = create_system_restore_point()
+                    if rp_ok:
+                        self.append_log(f"  [OK] {rp_msg}")
+                    else:
+                        self.append_log(f"  [BİLGİ] {rp_msg}")
+                except Exception as rp_err:
+                    logger.debug(f"Geri yükleme noktası oluşturulamadı: {rp_err}")
+                    self.append_log(f"  [BİLGİ] Geri yükleme noktası çağrısı atlandı: {rp_err}")
 
             for tweak_id, var in self.tweak_vars.items():
                 if var.get():

@@ -16,7 +16,11 @@ import threading
 import time
 import winreg
 from typing import Any, Dict, List, Tuple, Optional
+import shutil
 from system_checks import ensure_secure_dir, is_admin, get_system32_path
+from app_logger import get_logger
+
+logger = get_logger('tweaks')
 
 
 def _get_backup_file() -> str:
@@ -59,7 +63,7 @@ TWEAKS = [
     {
         "id": "disable_telemetry",
         "name": "Windows Telemetri ve Tanılama Verilerini Azalt",
-        "desc": "Microsoft'a gönderilen tanılama verilerini minimuma indirir (Home/Pro için Temel, Enterprise için Güvenlik).",
+        "desc": "Microsoft'a gönderilen tanılama verilerini en alt seviyeye çeker (AllowTelemetry=0 değeri Enterprise ve Education sürümlerinde tam kapatma sağlar; Home ve Pro sürümlerinde ise Windows bunu en düşük seviye olan Temel (1) olarak uygular).",
         "default": True,
         "scope_support": False,  # Sistem genelidir (HKLM)
     },
@@ -130,13 +134,29 @@ TWEAKS = [
 
 
 def _load_backup() -> Dict[str, Any]:
-    """tweaks_backup.json dosyasından kayıtlı önceki ayarları okur."""
+    """tweaks_backup.json dosyasından kayıtlı önceki ayarları okur.
+    Bozuk JSON görüldüğünde üzerine yazıp orijinal değerleri ezmemek için
+    dosyayı .corrupt uzantısıyla kenara alır.
+    """
     if not os.path.exists(BACKUP_FILE):
         return {}
     try:
         with open(BACKUP_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        logger.warning(f"tweaks_backup.json bozuk veya okunamadı: {e}. Dosya .corrupt olarak yedekleniyor.")
+        try:
+            corrupt_dest = BACKUP_FILE + ".corrupt"
+            timestamp_dest = BACKUP_FILE + f".corrupt_{int(time.time())}"
+            shutil.copy2(BACKUP_FILE, timestamp_dest)
+            if os.path.exists(corrupt_dest):
+                try:
+                    os.remove(corrupt_dest)
+                except Exception:
+                    pass
+            os.replace(BACKUP_FILE, corrupt_dest)
+        except Exception as copy_err:
+            logger.error(f"Bozuk yedek dosyası taşınamadı: {copy_err}")
         return {}
 
 
@@ -307,7 +327,7 @@ def apply_disable_telemetry(enable=True, scope="all") -> Tuple[bool, str]:
     if enable:
         ok = _safe_write_reg(winreg.HKEY_LOCAL_MACHINE, "HKLM", key_path, "AllowTelemetry", winreg.REG_DWORD, 0, tweak_id)
         if ok:
-            return True, "Telemetri veri toplama en alt seviyeye indirildi."
+            return True, "Telemetri veri toplama izin verilen en alt seviyeye ayarlandı (Enterprise/Edu: Kapalı, Pro/Home: Temel seviye)."
         return False, "Telemetri kaydı yazılamadı (Yönetici izni gereklidir)."
     else:
         # Geri alırken politika değerini tamamen sil (Varsayılan: Politika Tanımsız)
@@ -744,25 +764,34 @@ def revert_all_tweaks(scope="all") -> List[Tuple[str, bool, str]]:
                 os.remove(BACKUP_FILE)
         else:
             _save_backup(backup)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"Yedek dosyası güncellenemedi: {e}")
 
     return results
 
 
 def create_system_restore_point(description: str = "FormatSonrasi_Tweaks_Backup") -> Tuple[bool, str]:
-    """İnce ayarlar öncesinde Windows Sistem Geri Yükleme Noktası (Restore Point) oluşturur."""
+    """İnce ayarlar öncesinde Windows Sistem Geri Yükleme Noktası (Restore Point) oluşturur.
+    Windows varsayılan olarak Sistem Koruması'nı kapalı getirebilir veya 24 saat kısıtlaması uygulayabilir.
+    """
     try:
         clean_desc = re.sub(r"[^A-Za-z0-9_\- ]", "", description)
         ps_cmd = (
-            f"try {{ Checkpoint-Computer -Description '{clean_desc}' -RestorePointType 'MODIFY_SETTINGS' "
-            f"-ErrorAction Stop; exit 0 }} catch {{ exit 1 }}"
+            f"try {{ "
+            f"  Checkpoint-Computer -Description '{clean_desc}' -RestorePointType 'MODIFY_SETTINGS' -ErrorAction Stop; "
+            f"  exit 0 "
+            f"}} catch {{ "
+            f"  Write-Host $_.Exception.Message; "
+            f"  exit 1 "
+            f"}}"
         )
         ps_path = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell", "v1.0", "powershell.exe")
         creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
-        res = subprocess.run([ps_path, "-NoProfile", "-Command", ps_cmd], capture_output=True, text=True, timeout=30, creationflags=creationflags)
+        res = subprocess.run([ps_path, "-NoProfile", "-Command", ps_cmd], capture_output=True, text=True, timeout=35, creationflags=creationflags)
         if res.returncode == 0:
             return True, "Sistem geri yükleme noktası başarıyla oluşturuldu."
-        return False, "Sistem geri yükleme noktası oluşturulamadı (Geri yükleme hizmeti devre dışı olabilir)."
+        err_detail = (res.stdout or res.stderr).strip()
+        return False, f"Sistem geri yükleme noktası oluşturulamadı (Sistem Koruması kapalı olabilir veya 24 saat kısıtı devrede): {err_detail or 'Bilinmeyen neden'}"
     except Exception as e:
+        logger.warning(f"Geri yükleme noktası çağrısı başarısız: {e}")
         return False, f"Geri yükleme noktası çağrısı başarısız: {e}"
