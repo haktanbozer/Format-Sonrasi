@@ -19,6 +19,9 @@ import winreg
 from typing import Dict, Any, Optional, List, Tuple
 from system_checks import ensure_secure_dir, get_system32_path
 import apps_data
+from app_logger import get_logger
+
+logger = get_logger('session_manager')
 
 
 def _get_session_dir() -> str:
@@ -32,8 +35,8 @@ def _get_session_dir() -> str:
 
     try:
         os.makedirs(target_dir, exist_ok=True)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"Oturum dizini oluşturulamadı: {e}")
     return target_dir
 
 
@@ -211,12 +214,12 @@ class SessionManager:
                 return f'"{secure_exe}" --resume'
             except Exception as e:
                 # Güvenlik ilkesi: Asla kullanıcı yazılabilir yola düşme (Fallback kaldırıldı)
-                sys.stderr.write(f"[GUVENLIK] Güvenli konuma kopyalanamadı ({e}). Görev oluşturulmayacak.\n")
+                sys.stderr.write(f"[GÜVENLİK] Güvenli konuma kopyalanamadı ({e}). Görev oluşturulmayacak.\n")
                 return ""
         else:
             # Geliştirici modunda (donmamış Python) yetki yükseltme ve yol manipülasyonunu önlemek için
             # otomatik zamanlanmış görev oluşturulmaz.
-            sys.stderr.write("[BILGI] Geliştirici modunda (donmamış Python) otomatik zamanlanmış görev oluşturulmaz.\n")
+            sys.stderr.write("[BİLGİ] Geliştirici modunda (donmamış Python) otomatik zamanlanmış görev oluşturulmaz.\n")
             return ""
 
     @staticmethod
@@ -231,7 +234,7 @@ class SessionManager:
         try:
             cmd = SessionManager._build_resume_command()
             if not cmd:
-                sys.stderr.write("[BILGI] Güvenli resume komutu üretilmedi; otomatik görev kaydı atlandı.\n")
+                sys.stderr.write("[BİLGİ] Güvenli resume komutu üretilmedi; otomatik görev kaydı atlandı.\n")
                 return False
 
             if len(cmd) > 260:
@@ -404,7 +407,13 @@ class SessionManager:
         try:
             with open(path, "r", encoding="utf-8") as f:
                 return json.load(f)
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Oturum dosyası bozuk veya okunamadı ({path}): {e}")
+            try:
+                corrupt_path = path + ".corrupt"
+                shutil.copy2(path, corrupt_path)
+            except Exception as copy_err:
+                logger.debug(f"Bozuk oturum dosyası kopyalanamadı: {copy_err}")
             return None
 
     @staticmethod
