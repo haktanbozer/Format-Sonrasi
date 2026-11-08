@@ -1,0 +1,77 @@
+name: Build & GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install pyinstaller
+
+      - name: Testleri Çalıştır
+        run: |
+          python -m unittest discover
+
+      - name: EXE ve Dağıtım Paketini Derle
+        run: |
+          python build_single_exe.py
+
+      - name: Derleme Çıktılarını Doğrula ve Özetleri Çıkar
+        id: hashes
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem -Filter "FormatSonrasiKurulum-*.zip" | Select-Object -First 1
+          if (-not $zip) { throw "Release ZIP paketi bulunamadı!" }
+          $zipHash = (Get-FileHash $zip.FullName -Algorithm SHA256).Hash.ToLower()
+          Write-Output "ZIP_NAME=$($zip.Name)" >> $env:GITHUB_ENV
+          Write-Output "ZIP_HASH=$zipHash" >> $env:GITHUB_ENV
+          Write-Host "Paket: $($zip.Name)"
+          Write-Host "SHA256: $zipHash"
+
+      - name: Artifact Attestation Ekle
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'FormatSonrasiKurulum-*.zip'
+
+      - name: GitHub Release Oluştur
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "Format Sonrası Kurulum Sihirbazı ${{ github.ref_name }}"
+          body: |
+            ### Dağıtım Paketi ve Güvenlik Bütünlüğü
+            Bu sürüm GitHub Actions üzerinde açık kaynak kodlardan otomatik olarak derlenmiştir.
+
+            - **Dağıtım Arşivi:** `${{ env.ZIP_NAME }}`
+            - **SHA-256 Özeti:** `${{ env.ZIP_HASH }}`
+
+            #### Doğrulama (PowerShell):
+            ```powershell
+            Get-FileHash ./${{ env.ZIP_NAME }} -Algorithm SHA256
+            ```
+          files: |
+            FormatSonrasiKurulum-*.zip
+            FormatSonrasiKurulum-*.zip.sha256
+            SHA256SUMS.txt
